@@ -1,5 +1,12 @@
-_G.Velocity = 35
+--------------------------------------------------------------------------------
+--A Really Mad Guy with a Knife, a Tec-9 and a Sawed-Off! THOSE KIDS WILL PAY!--
+--------------------------------------------------------------------------------
+--By CKbackup (Sugarie Saffron)                               --
+--YT: https://www.youtube.com/channel/UC8n9FFz7e6Zo13ob_5F9MJw--
+--Discord: Sugarie Saffron#4705                               --
+----------------------------------------------------------------
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Tescalus/Pendulum-Hubs-Source/main/Reanimation.lua"))()
+loadstring(game:GetObjects("rbxassetid://5425999987")[1].Source)()
 _G.loop = true
 local player = game.Players.LocalPlayer
 local char = player.Character
@@ -41,3461 +48,1070 @@ local Align = function(Part0, Part1,Mesh)
  return {Attachments.Attach0, Attachments, Aligns}
         
 end 
-local hat = Align(char['MeshPartAccessory'].Handle,char['Right Arm'],false)
-local cf = char['Right Arm'].CFrame*CFrame.new(0,-.6,-2.5)*CFrame.Angles(math.rad(95),math.rad(0),-49.5)
+local hat = Align(char['MeshPartAccessory'].Handle,char['Left Arm'],false)
+local cf = char['Left Arm'].CFrame*CFrame.new(0,-0.6,-2.5)*CFrame.Angles(math.rad(95),math.rad(0),-49.5)
+hat[1].CFrame = cf:Inverse() * char['Left Arm'].CFrame
+spawn(function()
+    char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
+    _G.loop = false 
+end)
+_G.loop2 = true
+local player = game.Players.LocalPlayer
+local char = player.Character
+local Align = function(Part0, Part1,Mesh)
+    local Aligns = {
+        AlignOrientation = Instance.new("AlignOrientation", Part0),
+        AlignPosition = Instance.new("AlignPosition", Part0)
+    }
+    
+    local Attachments = {
+        Attach0 = Instance.new("Attachment", Part0),
+        Attach1 = Instance.new("Attachment", Part1)
+    }
+    local m = Part0:FindFirstChildOfClass('SpecialMesh')--This will get the first "SpecialMesh" it finds if it does not find any, then it will return nil
+    if Mesh and m then --If Mesh is set to true and it finds a mesh it will destroy it
+        m:Destroy()
+    end
+    Part0:BreakJoints()
+    Aligns.AlignOrientation.Attachment0 = Attachments.Attach0
+    Aligns.AlignOrientation.Attachment1 = Attachments.Attach1
+    Aligns.AlignOrientation.Responsiveness = math.huge
+    Aligns.AlignOrientation.RigidityEnabled = true
+    
+    Aligns.AlignPosition.Attachment0 = Attachments.Attach0
+    Aligns.AlignPosition.Attachment1 = Attachments.Attach1
+    Aligns.AlignPosition.Responsiveness = math.huge
+    Aligns.AlignPosition.RigidityEnabled = true
+        Aligns.AlignPosition.MaxForce = 999999999
+        spawn(function()
+            while _G.loop2 do 
+                local mag = (Part0.Position - (Part1.CFrame*Attachments.Attach0.CFrame:Inverse()).p).magnitude--magnitude can get the distance between two cframe or position
+                if mag >= 5 then 
+                Part0.CFrame = Part1.CFrame*Attachments.Attach0.CFrame:Inverse()
+                end
+                Part0.Velocity = Vector3.new(0,35,0)
+                game['Run Service'].Heartbeat:wait()
+                end
+        end)
+ return {Attachments.Attach0, Attachments, Aligns}
+        
+end 
+local hat = Align(char['AJBackAccessory'].Handle,char['Right Arm'],false)
+local cf = char['Right Arm'].CFrame*CFrame.new(0,-1,-0.5)*CFrame.Angles(math.rad(-360),math.rad(-100),-168.5)
 hat[1].CFrame = cf:Inverse() * char['Right Arm'].CFrame
 spawn(function()
     char.AncestryChanged:wait()--if you respawn, it will stop the  loop to avoid lag of using it over and over
     _G.loop = false 
 end)
-math.randomseed(tick())
-local player = game.Players.LocalPlayer
-local rekt = {}
-local paralyzed = false
-local curpoint = nil
-local curpart = nil
-local finishnum = 1
-local zombiemode = false
-local zombies = {}
-local lastgui = nil
-local mouse = player:GetMouse()
+wait(1/60)
+Effects = { }
+local Player = game:service'Players'.localPlayer
+local chara = game.Workspace.non
+local Humanoid = chara:FindFirstChildOfClass("Humanoid")
+local Mouse = Player:GetMouse()
+local LeftArm = chara["Left Arm"]
+local RightArm = chara["Right Arm"]
+local LeftLeg = chara["Left Leg"]
+local RightLeg = chara["Right Leg"]
+local Head = chara.Head
+local Torso = chara.Torso
+local Camera = workspace.CurrentCamera
+local RootPart = chara.HumanoidRootPart
+local RootJoint = RootPart.RootJoint
+local attack = false
+local Anim = 'Idle'
+local attacktype = 1
+local delays = false
+local play = true
+local targetted = nil
+local Torsovelocity = (RootPart.Velocity * Vector3.new(1, 0, 1)).magnitude 
+local velocity = RootPart.Velocity.y
+local sine = 0
+local change = 1
+local doe = 0
+local Create = LoadLibrary("RbxUtility").Create
+local debby = game:GetService("Debris")
+Humanoid.WalkSpeed = 8
 
-local char = game.Workspace.non
+Humanoid.Animator.Parent = nil
+chara.Animate.Parent = nil
 
-function bleed(frick)
-	while frick.Parent ~= nil do
-	local reeee = coroutine.wrap(function()
-	local thing = Instance.new('Part',game.Workspace)
-	thing.Size = Vector3.new(0.2,0.2,0.2)
-	thing.CFrame = frick.CFrame
-	thing.Shape = Enum.PartType.Ball
-	thing.CFrame = frick.CFrame
-	thing.Transparency = 1
-	thing.BrickColor = BrickColor.new('Maroon')
-	thing.Material = Enum.Material.SmoothPlastic
-	thing.Name = "Blood"
-	thing.CanCollide =false
-	local rawrxd = Instance.new('BodyForce',thing)
-	rawrxd.Force = frick.CFrame.upVector*(math.random()*2)+Vector3.new(math.random(-5, 5)/10,1.5,0)
-	local coru = coroutine.wrap(function()
-		wait(0.01)
-		rawrxd:Destroy()
-	end)
-	coru()
-	local ree = Instance.new('ParticleEmitter',thing)
-	ree.Color = ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(100,0,0)),ColorSequenceKeypoint.new(1,Color3.fromRGB(100,0,0))})
-	ree.Size = NumberSequence.new({NumberSequenceKeypoint.new(0,0.1),NumberSequenceKeypoint.new(1,0.1)})
-	ree.Texture = 'rbxassetid://867743272'
-	ree.Lifetime = NumberRange.new(0.4)
-	ree.Rate = 50
-	ree.LockedToPart = true
-	ree.Speed = NumberRange.new(0, 2)  
-	
-	thing.Touched:connect(function(tou)
-		if tou.Parent and tou.Parent:IsA('Tool') == false and tou.Parent.Parent:FindFirstChildOfClass('Humanoid') == nil and tou.Parent:FindFirstChildOfClass('Humanoid') == nil and tou.Name ~= "Blood" and tou.Parent.Name ~= "Projectile" and tou.Parent.Name ~= "big ass knife" and tou.Parent ~= player.Character and tou.Parent.ClassName ~= "Accessory" and tou.Parent.Name ~= "bitch ass knife" then
-			local pos = Vector3.new(thing.Position.X,(tou.Position.Y+(tou.Size.Y/2))+0.02,thing.Position.Z)
-			thing:Destroy()
-			if tou.Name == "BloodPuddle" then
-				local reee = tou.CFrame
-				if tou.Transparency > -0.2 then
-					tou.Transparency = tou.Transparency -0.1
-				end
-				if tou.Size.X < 10 then
-					tou.Size = tou.Size+Vector3.new(0.1,0,0.1)
-					tou.CFrame = reee
-				end
-			else
-				local bloodlol = Instance.new('Part',workspace)
-				bloodlol.Size=Vector3.new(1,0.2,1)
-				bloodlol.Name = "BloodPuddle"
-				bloodlol.Anchored = true
-				bloodlol.CanCollide = false
-				bloodlol.Material = Enum.Material.SmoothPlastic
-				bloodlol.BrickColor = BrickColor.new('Maroon')
-				local cyl = Instance.new('CylinderMesh',bloodlol)
-				cyl.Scale = Vector3.new(1,0.1,1)
-				bloodlol.CFrame = CFrame.new(pos)
-				local coru=coroutine.wrap(function()
-					while bloodlol.Parent ~= nil do
-						if bloodlol.Transparency < 1 then
-							bloodlol.Transparency = bloodlol.Transparency+0.05
-						else
-							bloodlol:Destroy()
-						end
-						wait(0.1)
-					end
-				end)
-				coru()
-			end
-		end
-	end)
-	local coru = coroutine.wrap(function()
-		wait(1)
-		thing:Destroy()
-	end)
-	coru()
-	end)
-	reeee()
-	wait()
-	end
+local newMotor = function(part0, part1, c0, c1)
+local w = Create('Motor'){
+Parent = part0,
+Part0 = part0,
+Part1 = part1,
+C0 = c0,
+C1 = c1,
+}
+return w
 end
 
-function killz(playa,hitz,kneef,explode,pool,head,charred,override)
-print("hi")
+function clerp(a, b, t)
+return a:lerp(b, t)
 end
 
-function nub()
-repeat wait() until player.Character and player.Character:FindFirstChild('Torso')
-local me = player.Character
-local point = me.HumanoidRootPart
-local playergui = player.PlayerGui
-local rightshoulderz = me.Torso["Right Shoulder"]:Clone()
-local leftshoulderz = me.Torso["Left Shoulder"]:Clone()
-local torsojoint = me.HumanoidRootPart["RootJoint"]:Clone()
-local lefthipz = me.Torso["Left Hip"]:Clone()
-local righthipz = me.Torso["Right Hip"]:Clone()
-local mode = "kill"
-local lerpz = false
-local active = false
-local acting = false
-local hit = false
-local canClick = true
-local stabbing = false
-local grabbing = false
-local finishing = false
-local kyssing = false
-local canbackgroundmusic = true
-local cancolorfilter = true
-local spinboolean = false
-local grabbed = nil
-local doing = false
-local rightshoulder = nil
-local leftshoulder = nil
-local headweld = nil
-local knifeparts = {}
-local usable = true
-finishnum = 1
+RootCF = CFrame.fromEulerAnglesXYZ(-1.57, 0, 3.14)
+NeckCF = CFrame.new(0, 1, 0, -1, -0, -0, 0, 0, 1, 0, 1, 0)
 
-function notify(msg,forever)
-	local doit = coroutine.wrap(function()
-		local gui = Instance.new('ScreenGui',playergui)
-		gui.Name = "Notification"
-		local frame = Instance.new('Frame',gui)
-		frame.Position = UDim2.new(0,0,0,0)
-		frame.Size = UDim2.new(1,0,0.2,0)
-		frame.BackgroundTransparency = 1
-		local txt = Instance.new('TextLabel',frame)
-		txt.TextColor3 = Color3.new(255,255,255)
-		txt.TextStrokeColor3 = Color3.new(0, 0, 0)
-		txt.TextStrokeTransparency = 0
-		txt.BackgroundTransparency = 1
-		txt.Text = ""
-		txt.Size = UDim2.new(1,0,0.3,0)
-		txt.Position = UDim2.new(0,0,0.4,0)
-		txt.TextScaled = true
-		txt.Font = "Code"
-		txt.TextXAlignment = "Center"
-		local tap = Instance.new("Sound")
-		tap.Parent = gui
-		tap.SoundId = "rbxassetid://147982968"
-		tap.TimePosition = 0.1
-		local str = msg
-		local len = string.len(str)
-		for i=1,len do
-			txt.Text = string.sub(str,1,i)
-			pitche = math.random(20, 40)/10
-			tap.PlaybackSpeed = pitche
-			tap:Play()
-			wait(0.01)
-		end
-		if forever == false then
-			wait(1)
-			while txt.TextTransparency < 1 do
-				txt.TextTransparency = txt.TextTransparency + 0.1
-				txt.TextStrokeTransparency = txt.TextStrokeTransparency + 0.1
-				wait(0.001)
-			end
-			gui:Destroy()
-		end
-	end)
-	doit()
+local RW = newMotor(Torso, RightArm, CFrame.new(1.5, 0, 0), CFrame.new(0, 0, 0)) 
+local LW = newMotor(Torso, LeftArm, CFrame.new(-1.5, 0, 0), CFrame.new(0, 0, 0))
+local RH = newMotor(Torso, RightLeg, CFrame.new(.5, -2, 0), CFrame.new(0, 0, 0))
+local LH = newMotor(Torso, LeftLeg, CFrame.new(-.5, -2, 0), CFrame.new(0, 0, 0))
+RootJoint.C1 = CFrame.new(0, 0, 0)
+RootJoint.C0 = CFrame.new(0, 0, 0)
+Torso.Neck.C1 = CFrame.new(0, 0, 0)
+Torso.Neck.C0 = CFrame.new(0, 1.5, 0)
+
+local rarmc1 = RW.C1
+local larmc1 = LW.C1
+local rlegc1 = RH.C1
+local llegc1 = LH.C1
+
+local resetc1 = false
+
+function PlayAnimationFromTable(table, speed, bool)
+RootJoint.C0 = clerp(RootJoint.C0, table[1], speed) 
+Torso.Neck.C0 = clerp(Torso.Neck.C0, table[2], speed) 
+RW.C0 = clerp(RW.C0, table[3], speed) 
+LW.C0 = clerp(LW.C0, table[4], speed) 
+RH.C0 = clerp(RH.C0, table[5], speed) 
+LH.C0 = clerp(LH.C0, table[6], speed) 
+if bool == true then
+if resetc1 == false then
+resetc1 = true
+RootJoint.C1 = RootJoint.C1
+Torso.Neck.C1 = Torso.Neck.C1
+RW.C1 = rarmc1
+LW.C1 = larmc1
+RH.C1 = rlegc1
+LH.C1 = llegc1
+end
+end
 end
 
-wait(0.5)
-notify("PRESS [Z] TO EQUIP KNIFE || Converted by Tescalus#0001",true)
-local laugh = Instance.new('Sound',me.Head)
-laugh.SoundId = 'rbxassetid://378827985'
-laugh.Name = "Psycho"
-laugh.Volume = 5
--- 1 - bitch ass knife
-local obj1 = Instance.new("Model")
-obj1.Name = "bitch ass knife"
-obj1.Parent = game.Workspace
-
--- 2 - Grab
-local obj2 = Instance.new("Part")
-obj2.CFrame = CFrame.new(Vector3.new(20.4525032, 6.14501333, -134.399979)) * CFrame.Angles(-3.1415927410126, 0, -3.1415927410126)
-obj2.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj2.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj2.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj2.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj2.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj2.Material = Enum.Material.Concrete
-obj2.Size = Vector3.new(1, 0.25, 0.25)
-obj2.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj2.Anchored = true
-obj2.BrickColor = BrickColor.new("Black")
-obj2.Friction = 0.30000001192093
-obj2.Shape = Enum.PartType.Cylinder
-obj2.Name = "Grab"
-obj2.Parent = obj1
-
--- 3 - handletopcap
-local obj3 = Instance.new("Part")
-obj3.CFrame = CFrame.new(Vector3.new(19.9725456, 6.14502859, -134.399933)) * CFrame.Angles(0, 1.5707963705063, 0)
-obj3.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj3.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj3.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj3.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj3.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj3.Material = Enum.Material.Concrete
-obj3.Size = Vector3.new(0.349999994, 0.349999994, 0.349999994)
-obj3.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj3.Anchored = true
-obj3.BrickColor = BrickColor.new("Black")
-obj3.Friction = 0.30000001192093
-obj3.Shape = Enum.PartType.Ball
-obj3.Name = "handletopcap"
-obj3.Parent = obj1
-
--- 4 - handlebottomcap
-local obj4 = Instance.new("Part")
-obj4.CFrame = CFrame.new(Vector3.new(20.9725285, 6.14502859, -134.399918)) * CFrame.Angles(0, 1.5707963705063, 0)
-obj4.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj4.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj4.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj4.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj4.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj4.Material = Enum.Material.Concrete
-obj4.Size = Vector3.new(0.25, 0.25, 0.25)
-obj4.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj4.Anchored = true
-obj4.BrickColor = BrickColor.new("Black")
-obj4.Friction = 0.30000001192093
-obj4.Shape = Enum.PartType.Ball
-obj4.Name = "handlebottomcap"
-obj4.Parent = obj1
-
--- 5 - handleguardmid
-local obj5 = Instance.new("Part")
-obj5.CFrame = CFrame.new(Vector3.new(19.9474983, 6.14502859, -134.399918)) * CFrame.Angles(0, 1.5707963705063, 0)
-obj5.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj5.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj5.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj5.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj5.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj5.Material = Enum.Material.Concrete
-obj5.Size = Vector3.new(0.349999994, 0.349999994, 0.100000001)
-obj5.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj5.Anchored = true
-obj5.BrickColor = BrickColor.new("Black")
-obj5.Friction = 0.30000001192093
-obj5.Shape = Enum.PartType.Block
-obj5.Name = "handleguardmid"
-obj5.Parent = obj1
-
--- 6 - handleguardcap1
-local obj6 = Instance.new("Part")
-obj6.CFrame = CFrame.new(Vector3.new(19.9474983, 6.32502794, -134.399918)) * CFrame.Angles(-3.1415927410126, 0, -3.1415927410126)
-obj6.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj6.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj6.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj6.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj6.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj6.Material = Enum.Material.Concrete
-obj6.Size = Vector3.new(0.100000001, 0.349999994, 0.349999994)
-obj6.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj6.Anchored = true
-obj6.BrickColor = BrickColor.new("Black")
-obj6.Friction = 0.30000001192093
-obj6.Shape = Enum.PartType.Cylinder
-obj6.Name = "handleguardcap1"
-obj6.Parent = obj1
-
--- 7 - handleguardcap2
-local obj7 = Instance.new("Part")
-obj7.CFrame = CFrame.new(Vector3.new(19.9474983, 5.97502899, -134.399918)) * CFrame.Angles(-3.1415927410126, 0, -3.1415927410126)
-obj7.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj7.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj7.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj7.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj7.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj7.Material = Enum.Material.Concrete
-obj7.Size = Vector3.new(0.100000009, 0.349999994, 0.349999994)
-obj7.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj7.Anchored = true
-obj7.BrickColor = BrickColor.new("Black")
-obj7.Friction = 0.30000001192093
-obj7.Shape = Enum.PartType.Cylinder
-obj7.Name = "handleguardcap2"
-obj7.Parent = obj1
-
--- 8 - big ass knife
-local obj8 = Instance.new("Part")
-obj8.CFrame = CFrame.new(Vector3.new(18.4375095, 6.14502859, -134.401321)) * CFrame.Angles(0, 1.5707963705063, 0)
-obj8.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj8.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj8.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj8.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj8.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj8.Material = Enum.Material.Metal
-obj8.Size = Vector3.new(0.0500000007, 0.280000001, 0.839999795)
-obj8.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj8.Anchored = true
-obj8.BrickColor = BrickColor.new("Lily white")
-obj8.Friction = 0.30000001192093
-obj8.Shape = Enum.PartType.Block
-obj8.Name = "big ass knife"
-obj8.Parent = obj1
-
--- 9 - Mesh
-local obj9 = Instance.new("BlockMesh")
-obj9.Scale = Vector3.new(0.5, 1, 1)
-obj9.Parent = obj8
-
--- 10 - big ass knife
-local obj10 = Instance.new("Part")
-obj10.CFrame = CFrame.new(Vector3.new(19.7425137, 6.14502859, -134.401321)) * CFrame.Angles(0, 1.5707963705063, 0)
-obj10.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj10.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj10.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj10.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj10.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj10.Material = Enum.Material.Metal
-obj10.Size = Vector3.new(0.0500000007, 0.280000001, 0.289999962)
-obj10.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj10.Anchored = true
-obj10.BrickColor = BrickColor.new("Lily white")
-obj10.Friction = 0.30000001192093
-obj10.Shape = Enum.PartType.Block
-obj10.Name = "big ass knife"
-obj10.Parent = obj1
-local knife = obj10
-
--- 11 - Mesh
-local obj11 = Instance.new("BlockMesh")
-obj11.Scale = Vector3.new(0.5, 1, 1)
-obj11.Parent = obj10
-
--- 12 - big ass knife
-local obj12 = Instance.new("Part")
-obj12.CFrame = CFrame.new(Vector3.new(19.1075306, 6.08502865, -134.401321)) * CFrame.Angles(0, 1.5707963705063, 0)
-obj12.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj12.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj12.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj12.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj12.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj12.Material = Enum.Material.Metal
-obj12.Size = Vector3.new(0.0500000007, 0.159999996, 0.979999959)
-obj12.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj12.Anchored = true
-obj12.BrickColor = BrickColor.new("Lily white")
-obj12.Friction = 0.30000001192093
-obj12.Shape = Enum.PartType.Block
-obj12.Name = "big ass knife"
-obj12.Parent = obj1
-
--- 13 - Mesh
-local obj13 = Instance.new("BlockMesh")
-obj13.Scale = Vector3.new(0.5, 1, 1)
-obj13.Parent = obj12
-
--- 14 - serration
-local obj14 = Instance.new("WedgePart")
-obj14.CFrame = CFrame.new(Vector3.new(19.4963322, 6.15381575, -134.400375)) * CFrame.Angles(1.5707963705063, -0.78539824485779, -1.5707963705063)
-obj14.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj14.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj14.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj14.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj14.Material = Enum.Material.Metal
-obj14.Size = Vector3.new(0.0500000007, 0.200000003, 0.200000003)
-obj14.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj14.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj14.Anchored = true
-obj14.BrickColor = BrickColor.new("Lily white")
-obj14.Friction = 0.30000001192093
-obj14.Name = "serration"
-obj14.Parent = obj1
-
--- 15 - Mesh
-local obj15 = Instance.new("BlockMesh")
-obj15.Scale = Vector3.new(0.5, 1, 1)
-obj15.Parent = obj14
-
--- 16 - serration
-local obj16 = Instance.new("WedgePart")
-obj16.CFrame = CFrame.new(Vector3.new(19.2763138, 6.15381575, -134.400375)) * CFrame.Angles(1.5707963705063, -0.78539824485779, -1.5707963705063)
-obj16.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj16.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj16.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj16.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj16.Material = Enum.Material.Metal
-obj16.Size = Vector3.new(0.0500000007, 0.200000003, 0.200000003)
-obj16.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj16.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj16.Anchored = true
-obj16.BrickColor = BrickColor.new("Lily white")
-obj16.Friction = 0.30000001192093
-obj16.Name = "serration"
-obj16.Parent = obj1
-
--- 17 - Mesh
-local obj17 = Instance.new("BlockMesh")
-obj17.Scale = Vector3.new(0.5, 1, 1)
-obj17.Parent = obj16
-
--- 18 - serration
-local obj18 = Instance.new("WedgePart")
-obj18.CFrame = CFrame.new(Vector3.new(19.3863068, 6.15381575, -134.400375)) * CFrame.Angles(1.5707963705063, -0.78539824485779, -1.5707963705063)
-obj18.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj18.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj18.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj18.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj18.Material = Enum.Material.Metal
-obj18.Size = Vector3.new(0.0500000007, 0.200000003, 0.200000003)
-obj18.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj18.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj18.Anchored = true
-obj18.BrickColor = BrickColor.new("Lily white")
-obj18.Friction = 0.30000001192093
-obj18.Name = "serration"
-obj18.Parent = obj1
-
--- 19 - Mesh
-local obj19 = Instance.new("BlockMesh")
-obj19.Scale = Vector3.new(0.5, 1, 1)
-obj19.Parent = obj18
-
--- 20 - serration
-local obj20 = Instance.new("WedgePart")
-obj20.CFrame = CFrame.new(Vector3.new(19.5963173, 6.15381575, -134.400375)) * CFrame.Angles(1.5707963705063, -0.78539824485779, -1.5707963705063)
-obj20.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj20.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj20.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj20.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj20.Material = Enum.Material.Metal
-obj20.Size = Vector3.new(0.0500000007, 0.200000003, 0.200000003)
-obj20.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj20.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj20.Anchored = true
-obj20.BrickColor = BrickColor.new("Lily white")
-obj20.Friction = 0.30000001192093
-obj20.Name = "serration"
-obj20.Parent = obj1
-
--- 21 - Mesh
-local obj21 = Instance.new("BlockMesh")
-obj21.Scale = Vector3.new(0.5, 1, 1)
-obj21.Parent = obj20
-
--- 22 - serration
-local obj22 = Instance.new("WedgePart")
-obj22.CFrame = CFrame.new(Vector3.new(19.1663074, 6.15381575, -134.400375)) * CFrame.Angles(1.5707963705063, -0.78539824485779, -1.5707963705063)
-obj22.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj22.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj22.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj22.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj22.Material = Enum.Material.Metal
-obj22.Size = Vector3.new(0.0500000007, 0.200000003, 0.200000003)
-obj22.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj22.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj22.Anchored = true
-obj22.BrickColor = BrickColor.new("Lily white")
-obj22.Friction = 0.30000001192093
-obj22.Name = "serration"
-obj22.Parent = obj1
-
--- 23 - Mesh
-local obj23 = Instance.new("BlockMesh")
-obj23.Scale = Vector3.new(0.5, 1, 1)
-obj23.Parent = obj22
-
--- 24 - serration
-local obj24 = Instance.new("WedgePart")
-obj24.CFrame = CFrame.new(Vector3.new(18.9663048, 6.15381575, -134.400375)) * CFrame.Angles(1.5707963705063, -0.78539824485779, -1.5707963705063)
-obj24.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj24.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj24.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj24.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj24.Material = Enum.Material.Metal
-obj24.Size = Vector3.new(0.0500000007, 0.200000003, 0.200000003)
-obj24.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj24.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj24.Anchored = true
-obj24.BrickColor = BrickColor.new("Lily white")
-obj24.Friction = 0.30000001192093
-obj24.Name = "serration"
-obj24.Parent = obj1
-
--- 25 - Mesh
-local obj25 = Instance.new("BlockMesh")
-obj25.Scale = Vector3.new(0.5, 1, 1)
-obj25.Parent = obj24
-
--- 26 - serration
-local obj26 = Instance.new("WedgePart")
-obj26.CFrame = CFrame.new(Vector3.new(18.8562984, 6.15381575, -134.400375)) * CFrame.Angles(1.5707963705063, -0.78539824485779, -1.5707963705063)
-obj26.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj26.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj26.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj26.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj26.Material = Enum.Material.Metal
-obj26.Size = Vector3.new(0.0500000007, 0.200000003, 0.200000003)
-obj26.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj26.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj26.Anchored = true
-obj26.BrickColor = BrickColor.new("Lily white")
-obj26.Friction = 0.30000001192093
-obj26.Name = "serration"
-obj26.Parent = obj1
-
--- 27 - Mesh
-local obj27 = Instance.new("BlockMesh")
-obj27.Scale = Vector3.new(0.5, 1, 1)
-obj27.Parent = obj26
-
--- 28 - serration
-local obj28 = Instance.new("WedgePart")
-obj28.CFrame = CFrame.new(Vector3.new(19.0663071, 6.15381575, -134.400375)) * CFrame.Angles(1.5707963705063, -0.78539824485779, -1.5707963705063)
-obj28.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj28.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj28.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj28.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj28.Material = Enum.Material.Metal
-obj28.Size = Vector3.new(0.0500000007, 0.200000003, 0.200000003)
-obj28.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj28.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj28.Anchored = true
-obj28.BrickColor = BrickColor.new("Lily white")
-obj28.Friction = 0.30000001192093
-obj28.Name = "serration"
-obj28.Parent = obj1
-
--- 29 - Mesh
-local obj29 = Instance.new("BlockMesh")
-obj29.Scale = Vector3.new(0.5, 1, 1)
-obj29.Parent = obj28
-
--- 30 - knifetip1
-local obj30 = Instance.new("WedgePart")
-obj30.CFrame = CFrame.new(Vector3.new(18.0163059, 6.14381599, -134.400375)) * CFrame.Angles(1.5707963705063, -0.78539824485779, -1.5707963705063)
-obj30.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj30.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj30.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj30.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj30.Material = Enum.Material.Metal
-obj30.Size = Vector3.new(0.0500000007, 0.200000003, 0.200000003)
-obj30.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj30.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj30.Anchored = true
-obj30.BrickColor = BrickColor.new("Lily white")
-obj30.Friction = 0.30000001192093
-obj30.Name = "knifetip1"
-obj30.Parent = obj1
-
--- 31 - Mesh
-local obj31 = Instance.new("BlockMesh")
-obj31.Scale = Vector3.new(0.5, 1, 1)
-obj31.Parent = obj30
-
--- 32 - redstuff
-local obj32 = Instance.new("Part")
-obj32.CFrame = CFrame.new(Vector3.new(19.9470005, 5.9749999, -134.399994)) * CFrame.Angles(-0, 0, -0)
-obj32.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj32.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj32.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj32.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj32.Material = Enum.Material.SmoothPlastic
-obj32.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj32.Size = Vector3.new(0.0500000007, 0.360000014, 0.360000014)
-obj32.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj32.BrickColor = BrickColor.new("Institutional white")
-obj32.Friction = 0.30000001192093
-obj32.Shape = Enum.PartType.Cylinder
-obj32.Name = "redstuff"
-obj32.Anchored = true
-obj32.Parent = obj1
-
-
--- 33 - redstuff
-local obj33 = Instance.new("Part")
-obj33.CFrame = CFrame.new(Vector3.new(18.9800053, 6.1400156, -134.404984)) * CFrame.Angles(-0, 0, -0)
-obj33.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj33.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj33.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj33.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj33.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj33.Material = Enum.Material.SmoothPlastic
-obj33.Size = Vector3.new(1.81999993, 0.100000001, 0.0500000007)
-obj33.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj33.BrickColor = BrickColor.new("Institutional white")
-obj33.Friction = 0.30000001192093
-obj33.Shape = Enum.PartType.Block
-obj33.Name = "redstuff"
-obj33.Anchored = true
-obj33.Parent = obj1
-
--- 34 - redstuff
-local obj34 = Instance.new("Part")
-obj34.CFrame = CFrame.new(Vector3.new(19.9470005, 6.32499981, -134.399994)) * CFrame.Angles(-0, 0, -0)
-obj34.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj34.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj34.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj34.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj34.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj34.Size = Vector3.new(0.0500000007, 0.360000014, 0.360000014)
-obj34.Material = Enum.Material.SmoothPlastic
-obj34.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj34.BrickColor = BrickColor.new("Institutional white")
-obj34.Friction = 0.30000001192093
-obj34.Shape = Enum.PartType.Cylinder
-obj34.Name = "redstuff"
-obj34.Anchored = true
-obj34.Parent = obj1
-
--- 35 - redstuff
-local obj35 = Instance.new("Part")
-obj35.CFrame = CFrame.new(Vector3.new(19.8830166, 6.14501476, -134.399963)) * CFrame.Angles(-0, 0, -0)
-obj35.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj35.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj35.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj35.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj35.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj35.Size = Vector3.new(0.0500000007, 0.319999993, 0.319999993)
-obj35.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj35.BrickColor = BrickColor.new("Institutional white")
-obj35.Friction = 0.30000001192093
-obj35.Shape = Enum.PartType.Cylinder
-obj35.Material = Enum.Material.SmoothPlastic
-obj35.Name = "redstuff"
-obj35.Anchored = true
-obj35.Parent = obj1
-
--- 36 - redstuff
-local obj36 = Instance.new("Part")
-obj36.CFrame = CFrame.new(Vector3.new(20.9430103, 6.14501476, -134.399963)) * CFrame.Angles(-0, 0, -0)
-obj36.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj36.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj36.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj36.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj36.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj36.Material = Enum.Material.SmoothPlastic
-obj36.Size = Vector3.new(0.0500000007, 0.25999999, 0.25999999)
-obj36.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj36.BrickColor = BrickColor.new("Institutional white")
-obj36.Friction = 0.30000001192093
-obj36.Shape = Enum.PartType.Cylinder
-obj36.Name = "redstuff"
-obj36.Anchored = true
-obj36.Parent = obj1
-
--- 37 - redstuff
-local obj37 = Instance.new("WedgePart")
-obj37.CFrame = CFrame.new(Vector3.new(18.066288, 6.14381599, -134.400375)) * CFrame.Angles(1.5707963705063, -0.78539824485779, -1.5707963705063)
-obj37.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj37.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj37.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj37.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj37.Material = Enum.Material.SmoothPlastic
-obj37.Size = Vector3.new(0.0500000007, 0.0700000003, 0.0700000003)
-obj37.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj37.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj37.Anchored = true
-obj37.BrickColor = BrickColor.new("Institutional white")
-obj37.Friction = 0.30000001192093
-obj37.Name = "redstuff"
-obj37.Anchored = true
-obj37.Parent = obj1
-
--- 38 - redstuff
-local obj38 = Instance.new("Part")
-obj38.CFrame = CFrame.new(Vector3.new(20.1230125, 6.14501476, -134.399979)) * CFrame.Angles(-0, 0, -0)
-obj38.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
-obj38.TopSurface = Enum.SurfaceType.SmoothNoOutlines
-obj38.RightSurface = Enum.SurfaceType.SmoothNoOutlines
-obj38.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
-obj38.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
-obj38.Material = Enum.Material.SmoothPlastic
-obj38.Size = Vector3.new(0.0500000007, 0.25999999, 0.25999999)
-obj38.BackSurface = Enum.SurfaceType.SmoothNoOutlines
-obj38.BrickColor = BrickColor.new("Institutional white")
-obj38.Friction = 0.30000001192093
-obj38.Shape = Enum.PartType.Cylinder
-obj38.Name = "redstuff"
-obj38.Anchored = true
-obj38.Parent = obj1
-
-local function recurse(objnum)
-	table.insert(knifeparts,{objnum,objnum.Parent})
-	for i,v in pairs(objnum:GetChildren()) do
-		recurse(v)
-	end
+ArtificialHB = Instance.new("BindableEvent", script)
+ArtificialHB.Name = "Heartbeat"
+script:WaitForChild("Heartbeat")
+frame = 0.03333333333333
+tf = 0
+allowframeloss = false
+tossremainder = false
+lastframe = tick()
+script.Heartbeat:Fire()
+game:GetService("RunService").Heartbeat:connect(function(s, p)
+tf = tf + s
+if tf >= frame then
+if allowframeloss then
+script.Heartbeat:Fire()
+lastframe = tick()
+else
+for i = 1, math.floor(tf / frame) do
+script.Heartbeat:Fire()
 end
-
-recurse(obj1)
-
-local audio = Instance.new('Sound',knife)
-audio.Volume = 2
-
-local audio2 = Instance.new('Sound',knife)
-audio2.Volume = 2
-
-local holdpart = Instance.new("Part")
-holdpart.Parent = me
-holdpart.Size = Vector3.new(0.4, 0.4, 0.2)
-holdpart.Position = me.Head.Position + Vector3.new(0, 1, 0)
-holdpart.BrickColor = BrickColor.new("Burnt Sienna")
-
-local previous = nil
-for i,v in pairs(obj1:GetChildren()) do
-	if v:IsA('BasePart') then
-		if previous then
-			local weld = Instance.new('Weld',v)
-			weld.Part0 = v
-			weld.Part1 = previous
-			weld.C0 = v.CFrame:inverse() * previous.CFrame
-			previous.Anchored = false
-			previous.CanCollide = false
-			local vee = v
-			weld.AncestryChanged:connect(function(mez,par)
-				wait()
-				weld.Parent = vee
-			end)
-		end
-		previous = v
-	end
+lastframe = tick()
 end
-previous.Anchored = false
-previous.CanCollide = false
-
-local holdpartweld = Instance.new("Weld", me.Torso)
-holdpartweld.Part0 = me.Torso
-holdpartweld.Part1 = holdpart
-holdpartweld.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(-1, -0.8, 0.15)
-
-holdpartweld.AncestryChanged:connect(function(mez,par)
-	if par ~= me.Torso then
-		wait()
-		holdpartweld.Parent = me.Torso
-	end
-end)
-
-local knifeweld = Instance.new('Weld',me.Torso)
-knifeweld.Part0 = me.Torso
-knifeweld.Part1 = obj2
-knifeweld.C1 = CFrame.Angles(0,math.rad(90),0) * CFrame.new(1, 0.8, 0.55)
-knifeweld.AncestryChanged:connect(function(mez,par)
-	if par ~= me.Torso then
-		wait()
-		knifeweld.Parent = me.Torso
-	end
-end)
-local ScreenGui = Instance.new("ScreenGui")
-local CustomizeGui = Instance.new("Frame")
-local Customize = Instance.new("TextLabel")
-local ClosestColor = Instance.new("TextLabel")
-local Line = Instance.new("TextLabel")
-local Color = Instance.new("ImageLabel")
-local Close = Instance.new("TextButton")
-local RedHue = Instance.new("TextLabel")
-local GreenHue = Instance.new("TextLabel")
-local RedInput = Instance.new("TextBox")
-local BlueHue = Instance.new("TextLabel")
-local GreenInput = Instance.new("TextBox")
-local TransInput = Instance.new("TextBox")
-local BlueInput = Instance.new("TextBox")
-local Message = Instance.new("TextLabel")
-local Message2 = Instance.new("TextLabel")
-local TrailTransparency = Instance.new("TextLabel")
-local TrailInput = Instance.new("TextBox")
-local MusicOption = Instance.new("TextButton")
-local ScreenOption = Instance.new("TextButton")
-local ScreenOptionTxt = Instance.new("TextLabel")
-local MusicOptionTxt = Instance.new("TextLabel")
-
--- Properties
-
-ScreenGui.Parent = playergui
-
-CustomizeGui.Name = "CustomizeGui"
-CustomizeGui.Parent = ScreenGui
-CustomizeGui.BackgroundColor3 = Color3.new(0.294118, 0.294118, 0.294118)
-CustomizeGui.BackgroundTransparency = 0.5
-CustomizeGui.BorderColor3 = Color3.new(0, 0, 0)
-CustomizeGui.BorderSizePixel = 2
-CustomizeGui.Position = UDim2.new(0, 0, 0.5, 0)
-CustomizeGui.Size = UDim2.new(0.449999988, 0, 0.449999988, 0)
-
-Customize.Name = "Customize"
-Customize.Parent = CustomizeGui
-Customize.BackgroundColor3 = Color3.new(0.294118, 0.294118, 0.294118)
-Customize.BackgroundTransparency = 0.75
-Customize.BorderSizePixel = 0
-Customize.Size = UDim2.new(1, 0, 0.200000003, 0)
-Customize.FontSize = Enum.FontSize.Size28
-Customize.Text = "ACCENT COLOR CUSTOMIZATION"
-Customize.TextColor3 = Color3.new(1, 1, 1)
-Customize.TextScaled = true
-Customize.TextSize = 25
-Customize.TextStrokeTransparency = 0.5
-Customize.TextWrapped = true
-
-ClosestColor.Name = "ClosestColor"
-ClosestColor.Parent = CustomizeGui
-ClosestColor.BackgroundColor3 = Color3.new(1, 1, 1)
-ClosestColor.BackgroundTransparency = 1
-ClosestColor.Position = UDim2.new(0, 0, 0.850000024, 0)
-ClosestColor.Size = UDim2.new(1, 0, 0.150000006, 0)
-ClosestColor.Font = Enum.Font.SourceSansLight
-ClosestColor.FontSize = Enum.FontSize.Size32
-ClosestColor.Text = "Your color is closest to Institutional White"
-ClosestColor.TextColor3 = Color3.new(1, 1, 1)
-ClosestColor.TextSize = 30
-ClosestColor.TextStrokeTransparency = 0.5
-
-Line.Name = "Line"
-Line.Parent = CustomizeGui
-Line.BackgroundColor3 = Color3.new(0.137255, 0.137255, 0.137255)
-Line.BackgroundTransparency = 0.5
-Line.BorderColor3 = Color3.new(0, 0, 0)
-Line.BorderSizePixel = 0
-Line.Position = UDim2.new(0, 0, 0.200000003, 0)
-Line.Size = UDim2.new(1, 0, 0.0299999993, 0)
-Line.Font = Enum.Font.SourceSans
-Line.FontSize = Enum.FontSize.Size14
-Line.Text = " "
-Line.TextSize = 14
-
-Color.Name = "Color"
-Color.Parent = CustomizeGui
-Color.BackgroundColor3 = Color3.new(1, 1, 1)
-Color.BorderSizePixel = 0
-Color.Position = UDim2.new(0.699999988, 0, 0.419999987, 0)
-Color.Size = UDim2.new(0.300000012, 0, 0.300000012, 0)
-Color.SizeConstraint = Enum.SizeConstraint.RelativeYY
-
-MusicOption.Parent = CustomizeGui
-MusicOption.Name = "MusicOption"
-MusicOption.BackgroundColor3 = Color3.new(0, 1, 0)
-MusicOption.BorderSizePixel = 1
-MusicOption.Position = UDim2.new(0.01, 0, -0.12, 0)
-MusicOption.Size = UDim2.new(0.05, 0, 0.1, 0)
-MusicOption.Text = ""
-MusicOption.BackgroundTransparency = 0.5
-
-ScreenOption.Parent = CustomizeGui
-ScreenOption.Name = "ScreenOption"
-ScreenOption.BackgroundColor3 = Color3.new(0, 1, 0)
-ScreenOption.BorderSizePixel = 1
-ScreenOption.Position = UDim2.new(0.01, 0, -0.23, 0)
-ScreenOption.Size = UDim2.new(0.05, 0, 0.1, 0)
-ScreenOption.Text = ""
-ScreenOption.BackgroundTransparency = 0.5
-
-ScreenOptionTxt.Name = "ScreenOptionTxt"
-ScreenOptionTxt.Parent = CustomizeGui
-ScreenOptionTxt.BackgroundColor3 = Color3.new(1, 1, 1)
-ScreenOptionTxt.BackgroundTransparency = 1
-ScreenOptionTxt.Position = UDim2.new(0.07, 0, -0.23, 0)
-ScreenOptionTxt.Size = UDim2.new(1, 0, 0.07, 0)
-ScreenOptionTxt.Font = Enum.Font.SourceSans
-ScreenOptionTxt.FontSize = Enum.FontSize.Size24
-ScreenOptionTxt.Text = "Psychopath Red Filter"
-ScreenOptionTxt.TextColor3 = Color3.new(1, 1, 1)
-ScreenOptionTxt.TextScaled = true
-ScreenOptionTxt.TextSize = 20
-ScreenOptionTxt.TextStrokeColor3 = Color3.new(0, 0, 0)
-ScreenOptionTxt.TextStrokeTransparency = 0.5
-ScreenOptionTxt.TextWrapped = true
-ScreenOptionTxt.TextXAlignment = "Left"
-
-MusicOptionTxt.Name = "MusicOptionTxt"
-MusicOptionTxt.Parent = CustomizeGui
-MusicOptionTxt.BackgroundColor3 = Color3.new(1, 1, 1)
-MusicOptionTxt.BackgroundTransparency = 1
-MusicOptionTxt.Position = UDim2.new(0.07, 0, -0.12, 0)
-MusicOptionTxt.Size = UDim2.new(1, 0, 0.07, 0)
-MusicOptionTxt.Font = Enum.Font.SourceSans
-MusicOptionTxt.FontSize = Enum.FontSize.Size24
-MusicOptionTxt.Text = "Psychopath Background Music"
-MusicOptionTxt.TextColor3 = Color3.new(1, 1, 1)
-MusicOptionTxt.TextScaled = true
-MusicOptionTxt.TextSize = 20
-MusicOptionTxt.TextStrokeColor3 = Color3.new(0, 0, 0)
-MusicOptionTxt.TextStrokeTransparency = 0.5
-MusicOptionTxt.TextWrapped = true
-MusicOptionTxt.TextXAlignment = "Left"
-
-Close.Name = "Close"
-Close.Parent = CustomizeGui
-Close.BackgroundColor3 = Color3.new(0.294118, 0.294118, 0.294118)
-Close.BackgroundTransparency = 0.5
-Close.BorderColor3 = Color3.new(0, 0, 0)
-Close.BorderSizePixel = 2
-Close.Position = UDim2.new(1.005, 0, 0, 0)
-Close.Size = UDim2.new(0.100000001, 0, 0.2, 0)
-Close.Font = Enum.Font.SourceSans
-Close.FontSize = Enum.FontSize.Size14
-Close.Text = "X"
-Close.TextColor3 = Color3.new(1, 1, 1)
-Close.TextScaled = true
-Close.TextSize = 14
-Close.TextStrokeTransparency = 0
-Close.TextWrapped = true
-
-RedHue.Name = "RedHue"
-RedHue.Parent = CustomizeGui
-RedHue.BackgroundColor3 = Color3.new(1, 1, 1)
-RedHue.BackgroundTransparency = 1
-RedHue.Position = UDim2.new(0.100000001, 0, 0.400000006, 0)
-RedHue.Size = UDim2.new(0.300000012, 0, 0.100000001, 0)
-RedHue.Font = Enum.Font.SourceSans
-RedHue.FontSize = Enum.FontSize.Size24
-RedHue.Text = "RED Hue Value: "
-RedHue.TextColor3 = Color3.new(1, 1, 1)
-RedHue.TextScaled = true
-RedHue.TextSize = 20
-RedHue.TextStrokeColor3 = Color3.new(1, 0, 0)
-RedHue.TextStrokeTransparency = 0.75
-RedHue.TextWrapped = true
-
-GreenHue.Name = "GreenHue"
-GreenHue.Parent = CustomizeGui
-GreenHue.BackgroundColor3 = Color3.new(1, 1, 1)
-GreenHue.BackgroundTransparency = 1
-GreenHue.Position = UDim2.new(0.100000001, 0, 0.5, 0)
-GreenHue.Size = UDim2.new(0.300000012, 0, 0.100000001, 0)
-GreenHue.Font = Enum.Font.SourceSans
-GreenHue.FontSize = Enum.FontSize.Size24
-GreenHue.Text = "GREEN Hue Value:"
-GreenHue.TextColor3 = Color3.new(1, 1, 1)
-GreenHue.TextScaled = true
-GreenHue.TextSize = 20
-GreenHue.TextStrokeColor3 = Color3.new(0, 1, 0)
-GreenHue.TextStrokeTransparency = 0.75
-GreenHue.TextWrapped = true
-
-RedInput.Name = "RedInput"
-RedInput.Parent = CustomizeGui
-RedInput.BackgroundColor3 = Color3.new(0.137255, 0.137255, 0.137255)
-RedInput.BackgroundTransparency = 0.5
-RedInput.BorderSizePixel = 0
-RedInput.Position = UDim2.new(0.419999987, 0, 0.425000007, 0)
-RedInput.Size = UDim2.new(0.200000003, 0, 0.075000003, 0)
-RedInput.Font = Enum.Font.SourceSans
-RedInput.FontSize = Enum.FontSize.Size14
-RedInput.Text = "255"
-RedInput.TextColor3 = Color3.new(1, 1, 1)
-RedInput.TextSize = 14
-RedInput.TextStrokeTransparency = 0
-
-BlueHue.Name = "BlueHue"
-BlueHue.Parent = CustomizeGui
-BlueHue.BackgroundColor3 = Color3.new(1, 1, 1)
-BlueHue.BackgroundTransparency = 1
-BlueHue.Position = UDim2.new(0.100000001, 0, 0.600000024, 0)
-BlueHue.Size = UDim2.new(0.300000012, 0, 0.100000001, 0)
-BlueHue.Font = Enum.Font.SourceSans
-BlueHue.FontSize = Enum.FontSize.Size24
-BlueHue.Text = "BLUE Hue Value:"
-BlueHue.TextColor3 = Color3.new(1, 1, 1)
-BlueHue.TextScaled = true
-BlueHue.TextSize = 20
-BlueHue.TextStrokeColor3 = Color3.new(0, 0, 1)
-BlueHue.TextStrokeTransparency = 0.75
-BlueHue.TextWrapped = true
-
-TrailTransparency.Name = "TrailTransparency"
-TrailTransparency.Parent = CustomizeGui
-TrailTransparency.BackgroundColor3 = Color3.new(1, 1, 1)
-TrailTransparency.BackgroundTransparency = 1
-TrailTransparency.Position = UDim2.new(0.090000001, 0, 0.700000024, 0)
-TrailTransparency.Size = UDim2.new(0.310000012, 0, 0.100000001, 0)
-TrailTransparency.Font = Enum.Font.SourceSans
-TrailTransparency.FontSize = Enum.FontSize.Size24
-TrailTransparency.Text = "Trail Transparency:"
-TrailTransparency.TextColor3 = Color3.new(1, 1, 1)
-TrailTransparency.TextScaled = true
-TrailTransparency.TextSize = 20
-TrailTransparency.TextStrokeColor3 = Color3.new(0, 0, 0)
-TrailTransparency.TextWrapped = true
-
-GreenInput.Name = "GreenInput"
-GreenInput.Parent = CustomizeGui
-GreenInput.BackgroundColor3 = Color3.new(0.137255, 0.137255, 0.137255)
-GreenInput.BackgroundTransparency = 0.5
-GreenInput.BorderSizePixel = 0
-GreenInput.Position = UDim2.new(0.419999987, 0, 0.524999976, 0)
-GreenInput.Size = UDim2.new(0.200000003, 0, 0.075000003, 0)
-GreenInput.Font = Enum.Font.SourceSans
-GreenInput.FontSize = Enum.FontSize.Size14
-GreenInput.Text = "255"
-GreenInput.TextColor3 = Color3.new(1, 1, 1)
-GreenInput.TextSize = 14
-GreenInput.TextStrokeTransparency = 0
-
-TransInput.Name = "TransInput"
-TransInput.Parent = CustomizeGui
-TransInput.BackgroundColor3 = Color3.new(0.137255, 0.137255, 0.137255)
-TransInput.BackgroundTransparency = 0.5
-TransInput.BorderSizePixel = 0
-TransInput.Position = UDim2.new(0.419999987, 0, 0.725000024, 0)
-TransInput.Size = UDim2.new(0.200000003, 0, 0.075000003, 0)
-TransInput.Font = Enum.Font.SourceSans
-TransInput.FontSize = Enum.FontSize.Size14
-TransInput.Text = "50"
-TransInput.TextColor3 = Color3.new(1, 1, 1)
-TransInput.TextSize = 14
-TransInput.TextStrokeTransparency = 0
-
-BlueInput.Name = "BlueInput"
-BlueInput.Parent = CustomizeGui
-BlueInput.BackgroundColor3 = Color3.new(0.137255, 0.137255, 0.137255)
-BlueInput.BackgroundTransparency = 0.5
-BlueInput.BorderSizePixel = 0
-BlueInput.Position = UDim2.new(0.419999987, 0, 0.625, 0)
-BlueInput.Size = UDim2.new(0.200000003, 0, 0.075000003, 0)
-BlueInput.Font = Enum.Font.SourceSans
-BlueInput.FontSize = Enum.FontSize.Size14
-BlueInput.Text = "255"
-BlueInput.TextColor3 = Color3.new(1, 1, 1)
-BlueInput.TextSize = 14
-BlueInput.TextStrokeTransparency = 0
-
-Message.Name = "Message"
-Message.Parent = CustomizeGui
-Message.BackgroundColor3 = Color3.new(1, 1, 1)
-Message.BackgroundTransparency = 1
-Message.Position = UDim2.new(0, 0, 0.2500004, 0)
-Message.Size = UDim2.new(1, 0, 0.100000006, 0)
-Message.Font = Enum.Font.SourceSans
-Message.FontSize = Enum.FontSize.Size18
-Message.Text = "|| Inputs must be values ||"
-Message.TextColor3 = Color3.new(1, 1, 1)
-Message.TextScaled = true
-Message.TextSize = 15
-Message.TextStrokeTransparency = 0.75
-Message.TextWrapped = true
-
-local attun = Instance.new("Attachment", knife)
-attun.Position = Vector3.new(0, 0.1, -1.75)
-local atdos = Instance.new("Attachment", knife)
-atdos.Position = Vector3.new(0, -0.1, 0.5)
-local trail = Instance.new("Trail", knife)
-trail.LightEmission = 0.5
-trail.Attachment0 = attun
-trail.Attachment1 = atdos
-trail.Lifetime = 0.175
-trail.MinLength = 0
-trail.Enabled = false
-
-function updatez()
-	local rc = tonumber(RedInput.Text)
-	local gc = tonumber(GreenInput.Text)
-	local bc = tonumber(BlueInput.Text)
-	local tcupd = tonumber(TransInput.Text)
-	if rc == nil then
-		rc = 0
-	end
-	if gc == nil then
-		gc = 0
-	end
-	if bc == nil then
-		bc = 0
-	end
-	if tcupd == nil then
-		tcupd = 0
-	end
-	local tc = tcupd/100
-	Color.BackgroundColor3 = Color3.fromRGB(rc,gc,bc)
-	ClosestColor.Text = "Your color is closest to "..tostring(BrickColor.new(Color3.fromRGB(rc,gc,bc)))
-	obj32.Color = Color3.fromRGB(rc,gc,bc)
-	obj33.Color = Color3.fromRGB(rc,gc,bc)
-	obj34.Color = Color3.fromRGB(rc,gc,bc)
-	obj35.Color = Color3.fromRGB(rc,gc,bc)
-	obj36.Color = Color3.fromRGB(rc,gc,bc)
-	obj37.Color = Color3.fromRGB(rc,gc,bc)
-	obj38.Color = Color3.fromRGB(rc,gc,bc)
-	trail.Color = ColorSequence.new(Color3.fromRGB(rc, gc, bc))
-	trail.Transparency = NumberSequence.new(tc)
-	TrailTransparency.TextStrokeTransparency = tc
+if tossremainder then
+tf = 0
+else
+tf = tf - frame * math.floor(tf / frame)
 end
-
-RedInput.Changed:connect(function(val)
-	if val == "Text" and tonumber(RedInput.Text) then
-		RedInput.Text = tostring(tonumber(RedInput.Text))
-		if tonumber(RedInput.Text) > 255 then
-			RedInput.Text = '255'
-		end
-	elseif val == "Text" then
-		RedInput.Text = ""
-	end
-	updatez()
-end)
-GreenInput.Changed:connect(function(val)
-	if val == "Text" and tonumber(GreenInput.Text) then
-		GreenInput.Text = tostring(tonumber(GreenInput.Text))
-		if tonumber(GreenInput.Text) > 255 then
-			GreenInput.Text = '255'
-		end
-	elseif val == "Text" then
-		GreenInput.Text = ""
-	end
-	updatez()
-end)
-BlueInput.Changed:connect(function(val)
-	if val == "Text" and tonumber(BlueInput.Text) then
-		BlueInput.Text = tostring(tonumber(BlueInput.Text))
-		if tonumber(BlueInput.Text) > 255 then
-			BlueInput.Text = '255'
-		end
-	elseif val == "Text" then
-		BlueInput.Text = ""
-	end
-	updatez()
-end)
-TransInput.Changed:connect(function(val)
-	if val == "Text" and tonumber(TransInput.Text) then
-		TransInput.Text = tostring(tonumber(TransInput.Text))
-		if tonumber(TransInput.Text) > 100 then
-			TransInput.Text = '100'
-		end
-	elseif val == "Text" then
-		TransInput.Text = ""
-	end
-	updatez()
-end)
-
-Close.MouseButton1Click:connect(function()
-	if lerpz == false then
-		lerpz = true
-		if Close.Text ~= "+" then
-			CustomizeGui:TweenPosition(UDim2.new(-0.45,0,0.5,0,Enum.EasingDirection.Out,Enum.EasingStyle.Quint,2))
-			for i=1,10 do
-				Close.TextTransparency = i/10
-				Close.TextStrokeTransparency = i/10
-				wait(0.01)
-			end
-			Close.Text = "+"
-			for i=1,10 do
-				Close.TextTransparency = (10-i+1)/10
-				Close.TextStrokeTransparency = (10-i+1)/10
-				wait(0.01)
-			end
-			lerpz = false
-		else
-			CustomizeGui:TweenPosition(UDim2.new(0,0,0.5,0,Enum.EasingDirection.Out,Enum.EasingStyle.Quint,2))
-			for i=1,10 do
-				Close.TextTransparency = i/10
-				Close.TextStrokeTransparency = i/10
-				wait(0.01)
-			end
-			Close.Text = "X"
-			for i=1,10 do
-				Close.TextTransparency = (10-i+1)/10
-				Close.TextStrokeTransparency = (10-i+1)/10
-				wait(0.01)
-			end
-			lerpz = false
-		end
-	end
-end)
-
-MusicOption.MouseButton1Click:connect(function()
-	if canbackgroundmusic == true then
-		canbackgroundmusic = false
-		MusicOption.BackgroundColor3 = Color3.new(1, 0, 0)
-	else
-		canbackgroundmusic = true
-		MusicOption.BackgroundColor3 = Color3.new(0, 1, 0)
-	end
-end)
-
-ScreenOption.MouseButton1Click:connect(function()
-	if cancolorfilter == true then
-		cancolorfilter = false
-		ScreenOption.BackgroundColor3 = Color3.new(1, 0, 0)
-	else
-		cancolorfilter = true
-		ScreenOption.BackgroundColor3 = Color3.new(0, 1, 0)
-	end
-end)
-
-function equip()
-	local doit = coroutine.wrap(function()
-	if me:FindFirstChild('Right Arm') and me:FindFirstChild('Torso') then
-		acting = true
-		local arm = me["Right Arm"]
-		local arm2 = me["Left Arm"]
-		local tors = me.Torso
-		local weld = Instance.new('Weld',arm)
-		weld.Part0 = arm
-		weld.Part1 = tors
-		weld.C0 = CFrame.new(-1.5,0,0)
-		local weld2 = Instance.new("Weld", arm2)
-		weld2.Part0 = arm2
-		weld2.Part1 = tors
-		weld2.C0 = CFrame.new(1.5, 0, 0)
-		wait(0.001)
-		for i = 0,1,0.1 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil then return end
-			weld.C0 = weld.C0:lerp(CFrame.new(-0.2,0.2,-0.5)*CFrame.Angles(0,-3.1,0.9),i)
-			weld2.C0 = weld2.C0:lerp(CFrame.new(1.5, 0.6, 0) * CFrame.Angles(0,0,0.5),i)
-			wait(0.001)
-		end
-		wait(0.15)
-		trail.Enabled = true
-		for i = 0,1,0.1 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil then return end
-			weld.C0 = weld.C0:lerp(CFrame.new(-0.5,2,0)*CFrame.Angles(0,0,-1.55),i)
-			weld2.C0 = weld2.C0:lerp(CFrame.new(1.5, 0, 0), i)
-			wait(0.001)
-		end
-		trail.Enabled = false
-		wait(0.2)
-		for i = 0,1,0.1 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil then return end
-			weld.C0 = weld.C0:lerp(CFrame.new(-1.5,0,0),i)
-			wait(0.001)
-		end
-		weld:Destroy()
-		weld2:Remove()
-		if tors ~= nil then
-			rightshoulderz:Clone().Parent = me.Torso
-			leftshoulderz:Clone().Parent = me.Torso
-		end
-	end
-	acting = false
-	end)
-	doit()
-end
-
-function kysnigga()
-	if kyssing == true then return end
-	kyssing = true
-	acting = true
-	decearingTHING = math.random(1, 100)
-	if decearingTHING == 4 then
-		decearingEGG = Instance.new("Sound", me.Torso)
-		decearingEGG.SoundId = "rbxassetid://138084557"
-		decearingEGG.PlaybackSpeed = math.random(10, 12) / 10
-		decearingEGG.TimePosition = 0.2
-		decearingEGG:Play()
-	end
-	me.Humanoid.WalkSpeed = 0
-	me.Humanoid.JumpPower = 0
-	
-	local rightarm = Instance.new("Weld", me.Torso)
-	rightarm.Part0 = me.Torso
-	rightarm.Part1 = me["Right Arm"]
-	rightarm.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(1.5, 0, 0)
-	
-	local leftarm = Instance.new("Weld", me.Torso)
-	leftarm.Part0 = me.Torso
-	leftarm.Part1 = me["Left Arm"]
-	leftarm.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(-1.5, 0, 0)
-	
-	local tors = Instance.new("Weld", me.HumanoidRootPart)
-	tors.Part0 = me.HumanoidRootPart
-	tors.Part1 = me.Torso
-	tors.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(0, 0, 0)
-	
-	local rightleg = Instance.new("Weld", me.Torso)
-	rightleg.Part0 = me.Torso
-	rightleg.Part1 = me["Right Leg"]
-	rightleg.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(0.5, -2, 0)
-	
-	local leftleg = Instance.new("Weld", me.Torso)
-	leftleg.Part0 = me.Torso
-	leftleg.Part1 = me["Left Leg"]
-	leftleg.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(-0.5, -2, 0)
-	
-	for i = 0, 1, 0.03 do
-		tors.C0 = tors.C0:lerp(CFrame.new(0, -1.5, 0) * CFrame.Angles(math.rad(-10), 0, 0), i)
-		leftleg.C0 = leftleg.C0:lerp(CFrame.new(-0.5, -1, 0) * CFrame.Angles(math.rad(-80), 0, 0), i)
-		rightleg.C0 = rightleg.C0:lerp(CFrame.new(0.5, -1, 0) * CFrame.Angles(math.rad(-80), 0, 0), i)
-		rightarm.C0 = rightarm.C0:lerp(CFrame.new(1.5, 0, 0) * CFrame.Angles(math.rad(0), math.rad(0), 0), i)
-		wait()
-	end
-	for i = 0, 1, 0.03 do
-		tors.C0 = tors.C0:lerp(CFrame.new(0, -1.5, 0) * CFrame.Angles(math.rad(5), 0, 0), i)
-		leftleg.C0 = leftleg.C0:lerp(CFrame.new(-0.5, -1, 0.15) * CFrame.Angles(math.rad(-95), 0, 0), i)
-		rightleg.C0 = rightleg.C0:lerp(CFrame.new(0.5, -1, 0.15) * CFrame.Angles(math.rad(-95), 0, 0), i)
-		rightarm.C0 = rightarm.C0:lerp(CFrame.new(1, 0.3, -1.5) * CFrame.Angles(math.rad(90), 0, math.rad(-35)), i)
-		leftarm.C0 = leftarm.C0:lerp(CFrame.new(-1, 0.3, -1.5) * CFrame.Angles(math.rad(90), 0, math.rad(35)), i)
-		knifeweld.C1 = knifeweld.C1:lerp(CFrame.new(1.35, 0, 1) * CFrame.Angles(1.55, math.rad(-180), 1), i)
-		wait()
-	end
-	local bleedzer = Instance.new('Part',me.Torso)
-	bleedzer.CFrame = me.Torso.CFrame
-	bleedzer.Size = Vector3.new(0.1,0.1,0.1)
-	bleedzer.Transparency = 1
-	bleedzer.CanCollide = false
-	local weld = Instance.new('Weld',bleedzer)
-	weld.Part0 = bleedzer
-	weld.Part1 = me.Torso
-	weld.C0= CFrame.new(0,0,0)*CFrame.Angles(math.rad(-90),0,0)
-	local woodpekker = coroutine.wrap(function()
-		bleed(bleedzer)
-	end)
-	woodpekker()
-	audio.SoundId = "rbxassetid://199977936"
-	audio.PlaybackSpeed = 1.5
-	audio:Play()
-	audio2.SoundId = "rbxassetid://220834019"
-	audio2.PlaybackSpeed = 1
-	audio2.TimePosition = 0.1
-	audio2:Play()
-	for i = 0, 1, 0.1 do
-		tors.C0 = tors.C0:lerp(CFrame.new(0, -1.5, 0) * CFrame.Angles(math.rad(-20), 0, 0), i)
-		leftleg.C0 = leftleg.C0:lerp(CFrame.new(-0.5, -1, -0.35) * CFrame.Angles(math.rad(-70), 0, 0), i)
-		rightleg.C0 = rightleg.C0:lerp(CFrame.new(0.5, -1, -0.35) * CFrame.Angles(math.rad(-70), 0, 0), i)
-		rightarm.C0 = rightarm.C0:lerp(CFrame.new(1, 0, 0) * CFrame.Angles(math.rad(70), 0, math.rad(-35)), i)
-		leftarm.C0 = leftarm.C0:lerp(CFrame.new(-1, 0, 0) * CFrame.Angles(math.rad(70), 0, math.rad(35)), i)
-		knifeweld.C1 = knifeweld.C1:lerp(CFrame.new(1.35, 0, 1) * CFrame.Angles(1.55, math.rad(-180), 1), i)
-		wait()
-	end
-	wait(1)
-	audio.SoundId = "rbxassetid://210943487"
-	audio.TimePosition = 0.2
-	audio.PlaybackSpeed = 0.75
-	audio:Play()
-	for i = 0, 1, 0.03 do
-		tors.C0 = tors.C0:lerp(CFrame.new(0, -1.5, 0) * CFrame.Angles(math.rad(-20), 0, 0), i)
-		leftleg.C0 = leftleg.C0:lerp(CFrame.new(-0.5, -1, -0.35) * CFrame.Angles(math.rad(-70), 0, 0), i)
-		rightleg.C0 = rightleg.C0:lerp(CFrame.new(0.5, -1, -0.35) * CFrame.Angles(math.rad(-70), 0, 0), i)
-		rightarm.C0 = rightarm.C0:lerp(CFrame.new(1, 0.3, -1.5) * CFrame.Angles(math.rad(70), 0, math.rad(-35)), i)
-		leftarm.C0 = leftarm.C0:lerp(CFrame.new(-1, 0.3, -1.5) * CFrame.Angles(math.rad(70), 0, math.rad(35)), i)
-		knifeweld.C1 = knifeweld.C1:lerp(CFrame.new(1.35, 0, 1) * CFrame.Angles(1.55, math.rad(-180), 1), i)
-		wait()
-	end
-	for i = 0, 1, 0.03 do
-		rightarm.C0 = rightarm.C0:lerp(CFrame.new(1.5, 0, -0.4) * CFrame.Angles(math.rad(30), 0, math.rad(0)), i)
-		leftarm.C0 = leftarm.C0:lerp(CFrame.new(-1.5, 0, -0.4) * CFrame.Angles(math.rad(30), 0, math.rad(0)), i)
-		knifeweld.C1 = knifeweld.C1:lerp(CFrame.fromEulerAnglesXYZ(1.55, math.rad(-90), 1.55) * CFrame.new(0, 0.95, 0), i)
-		wait()
-	end
-	wait(0.24)
-	if me:FindFirstChildOfClass('Humanoid') then
-		me:FindFirstChildOfClass('Humanoid').Health = 100
-	end
-	wait(0.01)
-	killz(me,me.Torso.Name,nil,nil,true)
-	
-	tors:Remove()
-	rightarm:Remove()
-	rightleg:Remove()
-	leftleg:Remove()
-	leftarm:Remove()
-	rightshoulderz:Clone().Parent = me.Torso
-	leftshoulderz:Clone().Parent = me.Torso
-	torsojoint:Clone().Parent = me.HumanoidRootPart
-	lefthipz:Clone().Parent = me.Torso
-	righthipz:Clone().Parent = me.Torso
-	me.Humanoid.JumpPower = 50
-	me.Humanoid.WalkSpeed = 16
-	acting = false
-	canClick = true
-	doing = false
-	hit = false
-	kyssing = false
-	if decearingTHING == 4 then
-		decearingEGG:Remove()
-	end
-end
-
-function bleedout()
-	local doit = coroutine.wrap(function()
-		local targe = grabbed
-		local num = 0
-		while targe and targe:FindFirstChildOfClass('Humanoid') and targe:FindFirstChildOfClass('Humanoid').Health > 0 and num < 11 do
-			if targe.Head:FindFirstChild('Died') then
-				tone = math.random(6, 12) / 10
-				targe.Head.Died.PlaybackSpeed = tone
-				targe.Head.Died:Play()
-			else
-				local deathsound = Instance.new('Sound',targe.Head)
-				deathsound.Name = "Died"
-				deathsound.SoundId = 'rbxasset://sounds/uuhhh.mp3'
-				deathsound.Volume = 0.65
-				deathsound.EmitterSize = 5
-				deathsound.MaxDistance = 150
-				tone = math.random(5, 15) / 10
-				targe.Head.Died.PlaybackSpeed = tone
-				targe.Head.Died:Play()
-			end
-			targe:FindFirstChildOfClass('Humanoid').Health = targe:FindFirstChildOfClass('Humanoid').Health - 0
-			num = num+1
-			wait(0.325)
-		end
-		targe:FindFirstChildOfClass('Humanoid').Health = 100
-		wait()
-		killz(targe,'Head',nil,nil,false,true)
-		wait(2)
-		targe:Remove()
-	end)
-	doit()
-end
-
-function liedown()
-	local doit = coroutine.wrap(function()
-	local targe = grabbed
-		wait(2)
-		if targe and targe:FindFirstChildOfClass('Humanoid') then
-			targe:FindFirstChildOfClass('Humanoid').PlatformStand = false
-		end
-	end)
-	doit()
-end
-
-function grab()
-	local doit = coroutine.wrap(function()
-	acting = true
-	me:FindFirstChildOfClass('Humanoid').WalkSpeed = me:FindFirstChildOfClass('Humanoid').WalkSpeed + 3
-	local arm = me["Right Arm"]
-	local tors = me.Torso
-	local arm2 = me["Left Arm"]
-	local humanroot = me.HumanoidRootPart
-	local weld2 = Instance.new('Weld',arm)
-	weld2.Part0 = arm
-	weld2.Part1 = tors
-	weld2.C0 = CFrame.new(-1.5,0,0) * CFrame.Angles(0, 0, 0)
-	local weld3 = Instance.new('Weld',arm2)
-	weld3.Part0 = arm2
-	weld3.Part1 = tors
-	weld3.C0 = CFrame.new(1.5,0,-0.3) * CFrame.Angles(0.3,0.1,0)
-	for i = 0,1,0.05 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil or humanroot == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-1.2,1.3,0.4)*CFrame.Angles(0.5,0,-1.2),i)
-		weld3.C0 = weld3.C0:lerp(CFrame.new(1.2,1.3,0)*CFrame.Angles(0,0,1.2),i)
-		knifeweld.C1 = CFrame.fromEulerAnglesXYZ(1.55, math.rad(-90), -1.55) * CFrame.new(0, 0.95, 0)
-		wait(0.01)
-	end
-	grabbing = true
-	trail.Enabled = true
-	for i = 0,1,0.10 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil or humanroot == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-0.9, 0.80, -1.1)* CFrame.Angles(-1.5, 0, -1.3), i)
-		weld3.C0 = weld3.C0:lerp(CFrame.new(0.8, 1, -0.5)* CFrame.Angles(-1.5, 0, 1.1), i)
-		wait(0.01)
-	end
-	trail.Enabled = false
-	wait(0.5)
-	grabbing = false
-	me:FindFirstChildOfClass('Humanoid').WalkSpeed = me:FindFirstChildOfClass('Humanoid').WalkSpeed - 3
-	if grabbed == nil then
-		for i = 0,1,0.1 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil then return end
-			weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0,0),i)
-			weld3.C0 = weld3.C0:lerp(CFrame.new(1.5,0,0),i)
-			knifeweld.C1 = CFrame.fromEulerAnglesXYZ(1.55, math.rad(-90), 1.55) * CFrame.new(0, 0.95, 0)
-			wait(0.001)
-		end
-		weld2:Destroy()
-		weld3:Destroy()
-		rightshoulderz:Clone().Parent = me.Torso
-			leftshoulderz:Clone().Parent = me.Torso
-		acting = false
-		canClick = true
-	end
-	end)
-	doit()
-end
-
-function kill()
-	paralyzed = false
-	if grabbed.Torso:FindFirstChild("TargetWeld") == nil or grabbed:FindFirstChildOfClass('Humanoid').Health <= 0 then hardrelease() return end
-	targetweld = grabbed.Torso.TargetWeld
-	targetweld2 = nil
-	local reee = grabbed:FindFirstChild("Left Arm")
-	if reee and reee:FindFirstChild("Weld") then
-		targetweld2 = reee.Weld
-	end
-	for i, v in pairs(grabbed:GetChildren()) do
-		if v.Name == "Part" then
-			v.CanCollide = true
-		end
-	end
-	targetweld3pt = grabbed:FindFirstChild("Right Arm")
-	local targetrightshoulder = rightshoulder
-	local targetleftshoulder = leftshoulder
-	local targetweld3 = Instance.new("Weld", targetweld3pt)
-	targetweld3.Part0 = grabbed.Torso
-	targetweld3.Part1 = targetweld3pt
-	targetweld3.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(1.5, 0, 0)
-	
-	local doit = coroutine.wrap(function()
-	local arm = me["Right Arm"]
-	local tors = grabbed.Torso
-	local arm2 = me["Left Arm"]
-	if arm:FindFirstChildOfClass('Weld') == nil or arm2:FindFirstChildOfClass('Weld') == nil then return end
-	doing = true
-	local weld2 = arm:FindFirstChildOfClass('Weld')
-	local weld3 = arm2:FindFirstChildOfClass('Weld')
-	local humanroot = me.HumanoidRootPart
-	
-	for i = 0,1,0.1 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil or weld3 == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-0.9, 0.80, -1.1)* CFrame.Angles(-1.9, 0, -1.4), i)
-		weld3.C0 = weld3.C0:lerp(CFrame.new(0.8, 0.5, -0.5)* CFrame.Angles(-1.5, 0.4, 1.1), i)
-		wait(0.01)
-	end
-	
-	audio:Stop()
-	audio.SoundId = "rbxassetid://517040733"
-	tone = math.random(1, 3)
-	if tone == 1 then audio.PlaybackSpeed = 0.8 audio.TimePosition = 0.3 end
-	if tone == 2 then audio.PlaybackSpeed = 1 audio.TimePosition = 0.1 end
-	if tone == 3 then audio.PlaybackSpeed = 1.2 audio.TimePosition = 0.2 end
-	audio:Play()
-	
-	local bleedpart = Instance.new("Part", grabbed)
-	bleedpart.Size = Vector3.new(0.2, 0.2, 0.2)
-	bleedpart.Color = Color3.new(115/225, 115/225, 115/225)
-	bleedpart.CanCollide = false
-	bleedpart.Position = grabbed.Head.Position + Vector3.new(0, 1, 0)
-	bleedpart.Transparency = 1
-	
-	local bleedpartweld = Instance.new("Weld", grabbed.Torso)
-	bleedpartweld.Part0 = grabbed.Torso
-	bleedpartweld.Part1 = bleedpart
-	bleedpartweld.C0 = CFrame.Angles(-1, 0, -0.35) * CFrame.new(0, 1, 0.8)
-	local coru=coroutine.wrap(function()
-	bleed(bleedpart)
-	end)
-	coru()
-	
-	local slightthrow = Instance.new("BodyThrust", grabbed.Torso)
-	slightthrow.Force = Vector3.new(0, 0, -2500)
-	
-	local slightthrow2 = Instance.new("BodyAngularVelocity", grabbed.Torso)
-	slightthrow2.AngularVelocity = Vector3.new(0, -1000, 0)
-	slightthrow2.MaxTorque = Vector3.new(1000, 1000, 1000)
-	
-	if grabbed:FindFirstChildOfClass('Humanoid') then
-		grabbed:FindFirstChildOfClass('Humanoid').PlatformStand = true
-	end
-	
-	killz(grabbed,'Left Leg')
-	killz(grabbed,'Left Arm')
-	killz(grabbed,'Right Leg')
-	killz(grabbed,'Right Arm')
-	
-	trail.Enabled = true
-	
-	for i = 0,1,0.2 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil or weld3 == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-0.9, 1.7, -0.5)* CFrame.Angles(-0.25, 0, -1.4), i)
-		weld3.C0 = weld3.C0:lerp(CFrame.new(0.8, 1.6, -0.5)* CFrame.Angles(-1.5, -1, 1.1), i)
-		wait(0.01)
-	end
-	
-	trail.Enabled = false
-	
-	bleedout()
-	
-	rightshoulderz:Clone().Parent = me.Torso
-		leftshoulderz:Clone().Parent = me.Torso
-	grabbed = nil
-	
-	if humanroot:FindFirstChild('Holder') then
-		humanroot.Holder:Destroy()
-	end
-	
-	wait(0.2)
-	slightthrow:Remove()
-	slightthrow2:Remove()
-	for i = 0,1,0.05 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil or weld3 == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5, 0, 0)* CFrame.Angles(0, 0, 0), i)
-		weld3.C0 = weld3.C0:lerp(CFrame.new(1.5, 0, 0)* CFrame.Angles(0, 0, 0), i)
-		knifeweld.C1 = CFrame.fromEulerAnglesXYZ(1.55, math.rad(-90), 1.55) * CFrame.new(0, 0.95, 0)
-		wait(0.01)
-	end
-	
-	weld2:Destroy()
-	weld3:Destroy()
-	targetweld = nil
-	targetweld2 = nil
-	targetweld3 = nil
-	rightshoulderz:Clone().Parent = me.Torso
-	leftshoulderz:Clone().Parent = me.Torso
-	acting = false
-	canClick = true
-	doing = false
-	end)
-	doit()
-end
-
-function finish()
-	if finishing == true then return end
-	finishing = true
-	acting = true
-	decearingTHING = math.random(1, 100)
-	if decearingTHING == 4 then
-		decearingEGG = Instance.new("Sound", me.Torso)
-		decearingEGG.SoundId = "rbxassetid://138084557"
-		decearingEGG.PlaybackSpeed = math.random(10, 12) / 10
-		decearingEGG.TimePosition = 0.2
-		decearingEGG:Play()
-	end
-	me.Humanoid.WalkSpeed = 0
-	me.Humanoid.JumpPower = 0
-	
-	local rightarm = Instance.new("Weld", me.Torso)
-	rightarm.Part0 = me.Torso
-	rightarm.Part1 = me["Right Arm"]
-	rightarm.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(1.5, 0, 0)
-	
-	local tors = Instance.new("Weld", me.HumanoidRootPart)
-	tors.Part0 = me.HumanoidRootPart
-	tors.Part1 = me.Torso
-	tors.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(0, 0, 0)
-	
-	local rightleg = Instance.new("Weld", me.Torso)
-	rightleg.Part0 = me.Torso
-	rightleg.Part1 = me["Right Leg"]
-	rightleg.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(0.5, -2, 0)
-	
-	local leftleg = Instance.new("Weld", me.Torso)
-	leftleg.Part0 = me.Torso
-	leftleg.Part1 = me["Left Leg"]
-	leftleg.C0 = CFrame.Angles(0, 0, 0) * CFrame.new(-0.5, -2, 0)
-	
-	for i = 0, 1, 0.05 do
-		tors.C0 = tors.C0:lerp(CFrame.new(0, 0, 0) * CFrame.Angles(math.rad(15), 0, 0), i)
-		leftleg.C0 = leftleg.C0:lerp(CFrame.new(-0.5, -2, 0.2) * CFrame.Angles(math.rad(-15), 0, 0), i)
-		rightleg.C0 = rightleg.C0:lerp(CFrame.new(0.5, -2, 0.2) * CFrame.Angles(math.rad(-15), 0, 0), i)
-		rightarm.C0 = rightarm.C0:lerp(CFrame.new(1.5, 1.9, 0) * CFrame.Angles(math.rad(179), math.rad(179), 0), i)
-		wait()
-	end
-	for i=1,finishnum do
-		local num1 = 0.5
-		local num2 = 0.5
-		local num3 = 0.25
-	if finishnum ~= 1 then
-		num3 = 0
-	end
-	trail.Enabled = true
-	for i = 0, 1, num1 do
-		tors.C0 = tors.C0:lerp(CFrame.new(0, -1.5, 0) * CFrame.Angles(math.rad(-60), 0, 0), i)
-		leftleg.C0 = leftleg.C0:lerp(CFrame.new(-0.5, -1.5, 0) * CFrame.Angles(math.rad(0), 0, 0), i)
-		rightleg.C0 = rightleg.C0:lerp(CFrame.new(0.5, -0.7, -1) * CFrame.Angles(math.rad(10), 0, 0), i)
-		rightarm.C0 = rightarm.C0:lerp(CFrame.new(1.5, 1.9, -1) * CFrame.Angles(math.rad(160), math.rad(150), 0), i)
-		wait()
-	end
-	wait()
-	for i = 0, 1, num2 do
-		tors.C0 = tors.C0:lerp(CFrame.new(0, -1, 0) * CFrame.Angles(math.rad(-20), 0, 0), i)
-		leftleg.C0 = leftleg.C0:lerp(CFrame.new(-0.5, -1.5, 0) * CFrame.Angles(math.rad(-30), 0, 0), i)
-		rightleg.C0 = rightleg.C0:lerp(CFrame.new(0.5, -0.7, -1) * CFrame.Angles(math.rad(-20), 0, 0), i)
-		rightarm.C0 = rightarm.C0:lerp(CFrame.new(1.5, 1.9, 0.2) * CFrame.Angles(math.rad(250), math.rad(180), 0), i)
-		wait()
-	end
-	trail.Enabled = false
-	wait(num3)
-	end
-	wait()
-	for i = 0, 1, 0.05 do
-		tors.C0 = tors.C0:lerp(CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0), i)
-		leftleg.C0 = leftleg.C0:lerp(CFrame.new(-0.5, -2, 0) * CFrame.Angles(0, 0, 0), i)
-		rightleg.C0 = rightleg.C0:lerp(CFrame.new(0.5, -2, 0) * CFrame.Angles(0, 0, 0), i)
-		rightarm.C0 = rightarm.C0:lerp(CFrame.new(1.5, 0, 0) * CFrame.Angles(0, 0, 0), i)
-		wait()
-	end
-	tors:Remove()
-	rightarm:Remove()
-	rightleg:Remove()
-	leftleg:Remove()
-	rightshoulderz:Clone().Parent = me.Torso
-	leftshoulderz:Clone().Parent = me.Torso
-	torsojoint:Clone().Parent = me.HumanoidRootPart
-	lefthipz:Clone().Parent = me.Torso
-	righthipz:Clone().Parent = me.Torso
-	me.Humanoid.JumpPower = 50
-	me.Humanoid.WalkSpeed = 16
-	acting = false
-	canClick = true
-	doing = false
-	hit = false
-	finishing = false
-	if decearingTHING == 4 then
-		decearingEGG:Remove()
-	end
-end
-
-function throw()
-	if grabbed.Torso:FindFirstChild("TargetWeld") == nil or grabbed:FindFirstChildOfClass('Humanoid').Health <= 100 then return end
-	paralyzed = false
-	targetweld = grabbed.Torso.TargetWeld
-	local ree = grabbed:FindFirstChild("Left Arm")
-	targetweld2 =nil
-	if ree and ree:FindFirstChild("Weld") then
-		targetweld2 = ree.Weld
-	end
-	
-	for i, v in pairs(grabbed:GetChildren()) do
-		if v.Name == "Part" then
-			v.CanCollide = true
-		end
-	end
-	
-	
-	local doit = coroutine.wrap(function()
-	local arm = me["Right Arm"]
-	local tors = grabbed.Torso
-	local arm2 = me["Left Arm"]
-	local targrightshoulder = rightshoulder
-	
-	local targleftshoulder = leftshoulder
-	if arm:FindFirstChildOfClass('Weld') == nil or arm2:FindFirstChildOfClass('Weld') == nil then return end
-	doing = true
-	local weld2 = arm:FindFirstChildOfClass('Weld')
-	local weld3 = arm2:FindFirstChildOfClass('Weld')
-	local humanroot = me.HumanoidRootPart
-	
-	for i = 0,1,0.2 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil or weld3 == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-0.9, 1.7, -0.5)* CFrame.Angles(-0.25, 1, -1.4), i)
-		weld3.C0 = weld3.C0:lerp(CFrame.new(0.8, 1.6, -0.5)* CFrame.Angles(-1.5, -1, 1.1), i)
-		targetweld.C0 = targetweld.C0:lerp(CFrame.new(0, 1.5, 0)*CFrame.Angles(0, 0, 0), i)
-		if targetweld2 then
-			targetweld2.C0 = targetweld2.C0:lerp(CFrame.new(-1.5, 0, 0)*CFrame.Angles(0, 0, 0), i)
-		end
-		wait(0.01)
-	end
-	
-	audio:Stop()
-	audio.SoundId = "rbxassetid://536642316"
-	tone = math.random(1, 3)
-	if tone == 1 then audio.PlaybackSpeed = 0.8 audio.TimePosition = 0.08 end
-	if tone == 2 then audio.PlaybackSpeed = 1 audio.TimePosition = 0.1 end
-	if tone == 3 then audio.PlaybackSpeed = 1.2 audio.TimePosition = 0.12 end
-	audio:Play()
-	
-	local slightthrow = Instance.new("BodyVelocity", grabbed.Torso)
-	slightthrow.Velocity = Vector3.new(0,20,0)+(me.Torso.CFrame.lookVector*20)
-	slightthrow.P = 5000
-	slightthrow.MaxForce = Vector3.new(9000001,9000001,9000001)
-	local point = grabbed.Torso.Position
-	local aaaaaa = grabbed
-	liedown()
-	
-	rightshoulderz:Clone().Parent = me.Torso
-			leftshoulderz:Clone().Parent = me.Torso
-	grabbed = nil
-	
-	if humanroot:FindFirstChild('Holder') then
-		humanroot.Holder:Destroy()
-	end
-	local coru = coroutine.wrap(function()
-		while aaaaaa and aaaaaa:FindFirstChild('Torso') and (aaaaaa.Torso.Position-point).magnitude < 5 do wait(0.001) end
-		if aaaaaa:FindFirstChildOfClass('Humanoid') then
-			aaaaaa:FindFirstChildOfClass('Humanoid').Name = "Humanoid"
-			aaaaaa:FindFirstChildOfClass('Humanoid').JumpPower = 50
-			aaaaaa:FindFirstChildOfClass('Humanoid').WalkSpeed = 16
-		end
-		slightthrow:Remove()
-	end)
-	coru()
-	
-	for i = 0,1,0.05 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil or weld3 == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0,0),i)
-		weld3.C0 = weld3.C0:lerp(CFrame.new(1.5,0,0),i)
-		wait(0.01)
-	end
-	weld2:Destroy()
-	weld3:Destroy()
-	targetweld:Remove()
-	if targetweld2 then
-		targetweld2:Remove()
-	end
-	if rightshoulder then
-	rightshoulder:Clone().Parent = tors
-	end
-	if leftshoulder then
-	leftshoulder:Clone().Parent = tors
-	end
-	headweld:Clone().Parent = tors
-	rightshoulderz:Clone().Parent = me.Torso
-			leftshoulderz:Clone().Parent = me.Torso
-	acting = false
-	canClick = true
-	doing = false
-	end)
-	doit()
-end
-
-cfn,ang,mr,int=CFrame.new,CFrame.Angles,math.rad,Instance.new
-bc=BrickColor.new
-local minimumsize = Vector3.new(0.7,0.7,0.7) 
-local surface_between_splitted_parts = 'SmoothNoOutlines'
-local fragmentable = workspace
-local list = {}
-local brickcount = 0
-local storage = {}
-local fillup = 1000
-local maximumstorage = 2000 
-local storage_position = Vector3.new(0,0,5000) 
-local stored_partsize = Vector3.new(1,1,1) 
-local parts_created_per_frame = 5 
-
-local minimumsize = Vector3.new(0.7,0.7,0.7) 
-local surface_between_splitted_parts = 'SmoothNoOutlines'
-local fragmentable = workspace
-local list = {}
-local brickcount = 0
-local storage = {}
-local fillup = 1000
-local maximumstorage = 2000
-local storage_position = Vector3.new(0,0,5000) 
-local stored_partsize = Vector3.new(1,1,1)
-local parts_created_per_frame = 5 
-
-
-function fragmentate(cframe,size,color,explosion_position,explosion_blastradius,backsurface,bottomsurface,frontsurface,leftsurface,rightsurface,topsurface,transparency,reflectance,material)
-	local xi = size.X >= minimumsize.X*(1+explosion_blastradius/16) and 2 or 1 
-	local yi = size.Y >= minimumsize.Y*(1+explosion_blastradius/16) and 2 or 1
-	local zi = size.Z >= minimumsize.Z*(1+explosion_blastradius/16) and 2 or 1
-	if xi == 1 and yi == 1 and zi == 1 or (cframe.p-explosion_position).magnitude > size.magnitude/2 + explosion_blastradius then 
-		if xi == 1 and yi == 1 and zi == 1 then return end 
-		if #storage > 0 then
-			local p = storage[1]
-			p.BrickColor = color
-			p.Size = size
-			p.Anchored = false
-			p.BackSurface = backsurface
-			p.BottomSurface = bottomsurface
-			p.FrontSurface = frontsurface
-			p.LeftSurface = leftsurface
-			p.RightSurface = rightsurface
-			p.TopSurface = topsurface
-			p.Transparency = transparency
-			p.CFrame = cframe
-			p.Reflectance = reflectance
-			p.Material = material
-			game:GetService('Debris'):AddItem(p,30)
-			p:BreakJoints()
-			table.remove(storage,1)
-		else
-			local p = Instance.new("Part",fragmentable)
-			p.BrickColor = color
-			p.FormFactor = "Custom"
-			p.Size = size
-			p.BackSurface = backsurface
-			p.BottomSurface = bottomsurface
-			p.FrontSurface = frontsurface
-			p.LeftSurface = leftsurface
-			p.RightSurface = rightsurface
-			p.TopSurface = topsurface
-			p.Transparency = transparency
-			p.Material = material
-		    if p.Transparency>0.285 then
-			    p.Anchored = false
-			else
-			    p.Anchored=false
-			    p.Material='Wood'
-				game:GetService('Debris'):AddItem(p,10)
-			end
-			p.CFrame = cframe
-			p.Reflectance = reflectance
-			p:BreakJoints()
-		end
-		return 
-	end
-	local mody = math.random(-125,125)/1000
-	for y = 1,yi do
-		if math.random()> 0.5 then
-			local modx = math.random(-125,125)/1000
-			for x = 1,xi do
-				local modz = math.random(-125,125)/1000
-				for z = 1,zi do --offset = x/xi-0.75+modx)
-					fragmentate(cframe*CFrame.new(size.X*(xi==1 and 0 or x/xi-0.75+modx),size.Y*(yi==1 and 0 or y/yi-0.75+mody),size.Z*(zi==1 and 0 or z/zi-0.75+modz)),
-						Vector3.new(xi == 2 and size.X*(1-2*math.abs(x/xi-0.75+modx)) or size.X,yi == 2 and size.Y*(1-2*math.abs(y/yi-0.75+mody)) or size.Y,
-						zi == 2 and size.Z*(1-2*math.abs(z/zi-0.75+modz)) or size.Z or mustardfoot_was_here),color,explosion_position,explosion_blastradius,
-						z~=zi and surface_between_splitted_parts or backsurface,y==2 and surface_between_splitted_parts or bottomsurface,
-						z==2 and surface_between_splitted_parts or frontsurface,x==2 and surface_between_splitted_parts or leftsurface,x~=xi and surface_between_splitted_parts or rightsurface,
-						y~=yi and surface_between_splitted_parts or topsurface,transparency,reflectance,material) 
-				end
-				
-			end
-		else
-			local modz = math.random(-125,125)/1000
-			for z = 1,zi do
-				local modx = math.random(-125,125)/1000
-				for x = 1,xi do
-					fragmentate(cframe*CFrame.new(size.X*(xi==1 and 0 or x/xi-0.75+modx),size.Y*(yi==1 and 0 or y/yi-0.75+mody),size.Z*(zi==1 and 0 or z/zi-0.75+modz)),
-						Vector3.new(xi == 2 and size.X*(1-2*math.abs(x/xi-0.75+modx)) or size.X,yi == 2 and size.Y*(1-2*math.abs(y/yi-0.75+mody)) or size.Y,
-						zi == 2 and size.Z*(1-2*math.abs(z/zi-0.75+modz)) or size.Z),color,explosion_position,explosion_blastradius,
-						z~=zi and surface_between_splitted_parts or backsurface,y==2 and surface_between_splitted_parts or bottomsurface,
-						z==2 and surface_between_splitted_parts or frontsurface,x==2 and surface_between_splitted_parts or leftsurface,x~=xi and surface_between_splitted_parts or rightsurface,
-						y~=yi and surface_between_splitted_parts or topsurface,transparency,reflectance,material)
-				end
-			end
-		end
-	end				
-end
-
-function start_fragmentation(position,radius,nuh)
-	local search = Region3.new(position-Vector3.new(radius,radius,radius)*1.1,position+Vector3.new(radius,radius,radius)*1.1)
-	repeat
-	local finish = false
-	local parts = workspace:FindPartsInRegion3WithIgnoreList(search,list,100)
-	for i = 1,#parts do
-		table.insert(list,1,parts[i])
-	end
-	finish = true
-	until #parts < 100 and finish
-	local t = tick()
-	for i = 1,#list do
-		local p = list[i]
-		if p:IsA('UnionOperation') == false and p:IsA('CornerWedgePart') == false and p:IsA('TrussPart') == false and p:IsA('WedgePart') == false and p.Parent and p.Parent ~= obj1 and p.Parent.Name ~= "Projectile" and p:IsDescendantOf(fragmentable) and p:GetMass()<50000 and p.Transparency>0.285 and p.Name~='Base' and p.Parent:FindFirstChildOfClass('Humanoid') == nil and p.Parent.Parent:FindFirstChildOfClass('Humanoid') == nil and p:IsDescendantOf(me)==false then
-			fragmentate(p.CFrame,p.Size,p.BrickColor,position,radius,p.BackSurface,p.BottomSurface,p.FrontSurface,p.LeftSurface,p.RightSurface,p.TopSurface,p.Transparency,p.Reflectance,p.Material)
-			if #storage < maximumstorage and p.Shape == "Block" then 
-				p.Anchored = false
-				p.FormFactor = "Custom"
-				p.Size = stored_partsize
-				p.Position = storage_position
-				table.insert(storage,1,p)
-			else 
-				p:Destroy()
-			end
-	    end
-		if nuh == false and p.Parent and p.Parent ~= obj1 and p.Parent.Name ~= "Projectile" and p:IsDescendantOf(fragmentable) and p:GetMass()<53000 and p.Transparency<0.05 and p.Name~='Base' and tostring(p.Material)=='Enum.Material.Wood' and p:IsDescendantOf(me)==false then
-			fragmentate(p.CFrame,p.Size,p.BrickColor,position,radius,p.BackSurface,p.BottomSurface,p.FrontSurface,p.LeftSurface,p.RightSurface,p.TopSurface,p.Transparency,p.Reflectance,p.Material)
-			if #storage < maximumstorage and p.Shape == "Block" then
-				p.Anchored = false
-				p.Material='Wood'
-				p.FormFactor = "Custom"
-				p.Size = stored_partsize
-				p.Position = storage_position
-				table.insert(storage,1,p)
-			else 
-				p:Destroy()
-			end
-		end
-	end	
-	list = {}
-end
-
-
-function fling()
-local doit = coroutine.wrap(function()
-if me:FindFirstChild('Right Arm') and me:FindFirstChild('Torso') and me:FindFirstChild('HumanoidRootPart') then
-	acting = true
-	for i=1,finishnum do
-	local weld2 = Instance.new('Weld',me["Right Arm"])
-	weld2.Part0 = me["Right Arm"]
-	weld2.Part1 = me["Torso"]
-	weld2.C0 = CFrame.new(-1.5,0,0)
-	if finishnum == 1 then
-	for i = 0,1,0.05 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0.9,-0.5)*CFrame.Angles(-math.pi/0.75,-math.pi/8,0),i)
-		wait(0.01)	
-	end
-	end
-	audio.SoundId = "rbxassetid://166083610"
-	audio.PlaybackSpeed = 1
-	audio.TimePosition = 0.1
-	audio:Play()
-	if finishnum == 1 then
-	for i = 0,1,0.5 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,1.2,0.1)*CFrame.Angles(math.pi/0.9,0,0),i)
-		wait(0.001)	
-	end
-	end
-	weld2.C0 = CFrame.new(-1.5,1.2,0.1)*CFrame.Angles(math.pi/0.9,0,0)
-	local knofe = obj1:Clone()
-	for i, v in pairs(obj1:GetChildren()) do
-		if v:IsA('BasePart') then
-		v.Transparency = 1
-		end
-	end
-	knofe.Parent = workspace
-	knofe.Name = "Projectile"
-	knofe.Grab.CFrame = CFrame.new(knofe.Grab.CFrame.p, mouse.Hit.p)*CFrame.Angles(0,math.pi/2,0)
-	knofe:FindFirstChild("Trail", true).Enabled = true
-	local heck = Instance.new('BodyVelocity',knofe.Grab)
-	heck.Velocity = (knofe.Grab.CFrame*CFrame.Angles(0,math.pi/-2,0)).lookVector*120
-	local coru = coroutine.wrap(function()
-		wait(0.45)
-		if heck then
-			heck:Destroy()
-		end
-	end)
-	coru()
-	local able = true
-	knofe["big ass knife"].Touched:connect(function(hit)
-		if hit.Parent and hit.Parent:FindFirstChildOfClass('Humanoid') and hit.Transparency < 1 and knofe.Grab.CanCollide == false and hit.Parent ~= me and hit.Parent.Parent ~= me then
-			local thing = hit.Parent:FindFirstChildOfClass('Humanoid')
-			local ree = hit.Parent
-			if thing == nil then
-				ree = hit.Parent.Parent
-			end
-			if ree:FindFirstChildOfClass('Humanoid').Health > 0 then
-				knofe:FindFirstChild("Trail", true).Enabled = false
-				game:GetService('Debris'):AddItem(knofe,5)
-				tone = math.random(1, 3)
-				local sound = Instance.new('Sound',knofe.Grab)
-				if tone == 1 then sound.SoundId = "rbxassetid://220833967" end
-				if tone == 2 then sound.SoundId = "rbxassetid://220833976" end
-				if tone == 3 then sound.SoundId = "rbxassetid://220834000" end
-				sound.PlaybackSpeed = 1
-				sound:Play()
-				for i, v in pairs(knofe:GetChildren()) do
-					if v:IsA('BasePart') then
-					v.CanCollide = true
-					v.Anchored = true
-					end
-				end
-				print("wait what")
-				if ree:FindFirstChildOfClass('Humanoid') and hit.Name == "Torso" or hit.Name == "Head" then
-					ree:FindFirstChildOfClass('Humanoid').Health = 100
-				end
-				wait()
-				killz(ree,hit.Name,knofe)
-			else
-				knofe:FindFirstChild("Trail", true).Enabled = false
-				heck.Velocity = Vector3.new(0,0,0)
-				heck:Destroy()
-				game:GetService('Debris'):AddItem(knofe,5)
-				tone = math.random(1, 3)
-				local sound = Instance.new('Sound',knofe.Grab)
-				if tone == 1 then sound.SoundId = "rbxassetid://220833967" end
-				if tone == 2 then sound.SoundId = "rbxassetid://220833976" end
-				if tone == 3 then sound.SoundId = "rbxassetid://220834000" end
-				sound.PlaybackSpeed = 1
-				sound:Play()
-				for i, v in pairs(knofe:GetChildren()) do
-					if v:IsA('BasePart') then
-					v.Anchored = false
-					end
-				end
-				print("wait what")
-				wait(0.001)
-				print("oh alright")
-				for i, v in pairs(knofe:GetChildren()) do
-					if v:IsA('BasePart') then
-					v.Anchored = false
-					end
-				end
-				if knofe then
-					local coru = coroutine.wrap(function()
-						if hit then
-							local uno = Instance.new('Part',workspace)
-							local dos = Instance.new('Part',workspace)
-							uno.CFrame = hit.CFrame
-							dos.CFrame = knofe["big ass knife"].CFrame
-							local weld = Instance.new('Weld',knofe["big ass knife"])
-							weld.Part0 = hit
-							weld.Part1 = knofe["big ass knife"]
-							weld.C0 = uno.CFrame:toObjectSpace(dos.CFrame)
-							uno:Destroy()
-							dos:Destroy()
-						end
-					end)
-					coru()
-				end
-			end
-		elseif hit.Parent and hit.Parent ~= me and hit.Parent.Parent ~= me and hit.CanCollide and knofe.Grab.CanCollide == false then
-			if hit.Transparency and (hit.Transparency<=0.285 or hit:GetMass()<=3000) then
-				knofe:FindFirstChild("Trail", true).Enabled = false
-				local sound = Instance.new('Sound',knofe.Grab)
-				sound.SoundId = 'rbxassetid://267585646'
-				sound:Play()
-				for i,v in pairs(knofe:GetChildren()) do
-					if v:IsA('BasePart') then
-						v.Anchored = true
-					end
-				end
-				wait()
-				heck.Velocity = Vector3.new(0,0,0)
-				heck:Destroy()
-				local uno = Instance.new('Part',workspace)
-							local dos = Instance.new('Part',workspace)
-							uno.CFrame = hit.CFrame
-							dos.CFrame = knofe["big ass knife"].CFrame
-							local weld = Instance.new('Weld',knofe["big ass knife"])
-							weld.Part0 = hit
-							weld.Part1 = knofe["big ass knife"]
-							weld.C0 = uno.CFrame:toObjectSpace(dos.CFrame)
-							uno:Destroy()
-							dos:Destroy()
-							for i,v in pairs(knofe:GetChildren()) do
-					if v:IsA('BasePart') then
-						v.Anchored = false
-					end
-				end
-				game:GetService('Debris'):AddItem(knofe,5)
-				for i,v in pairs(knofe:GetChildren()) do
-					if v:IsA('BasePart') then
-					v.CanCollide = true
-					end
-				end
-			end
-			if hit.Parent and hit.Transparency>0.285 and able == true and hit:GetMass()<3000 and hit.Parent:FindFirstChildOfClass('Humanoid') == nil and (hit.Parent.Parent == nil or hit.Parent.Parent:FindFirstChildOfClass('Humanoid') == nil) then
-				knofe:FindFirstChild("Trail", true).Enabled = false
-				able = false
-				local sound = Instance.new('Sound',knofe.Grab)
-				sound.SoundId = 'rbxassetid://144884907'
-				sound:Play()
-				local coru = coroutine.wrap(function()
-					start_fragmentation(knofe["big ass knife"].Position,1.25,knofe)
-				end)
-				coru()
-			end
-		end
-	end)
-	if finishnum == 1 then
-	for i= 0,1,0.1 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0,0),i)
-		wait(0.001)
-	end
-	else
-		for i= 0,1,0.5 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0,0),i)
-		wait(0.001)
-	end
-	end
-	for i,v in pairs(obj1:GetChildren()) do
-		if v:IsA('BasePart') then
-		v.Transparency = 0
-		end
-	end
-	weld2:Destroy()
-	rightshoulderz:Clone().Parent = me.Torso
-	end
-	acting = false
-	canClick = true
 end
 end)
-doit()
+function swait(num)
+if num == 0 or num == nil then
+ArtificialHB.Event:wait()
+else
+for i = 0, num do
+ArtificialHB.Event:wait()
+end
+end
 end
 
-function instasplode()
-	local coru = coroutine.wrap(function()
-		acting = true
-		for i=1,1 do
-		local weld2 = Instance.new('Weld',me["Right Arm"])
-		weld2.Part0 = me["Right Arm"]
-		weld2.Part1 = me["Torso"]
-		weld2.C0 = CFrame.new(-1.5,0,0)
-		if finishnum == 1 then
-		for i = 0,1,0.05 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil then return end
-			weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0.9,-0.5)*CFrame.Angles(-math.pi/0.75,-math.pi/8,0),i)
-			wait(0.01)	
-		end
-		end
-		weld2.C0 = CFrame.new(-1.5,0.9,-0.5)*CFrame.Angles(-math.pi/0.75,-math.pi/8,0)
-		audio.SoundId = "rbxassetid://166083610"
-		audio.PlaybackSpeed = 1
-		audio.TimePosition = 0.1
-		audio:Play()
-		if finishnum == 1 then
-		for i = 0,1,0.5 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil then return end
-			weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,1.2,0.1)*CFrame.Angles(math.pi/0.9,0,0),i)
-			wait(0.001)	
-		end
-		end
-		weld2.C0 = CFrame.new(-1.5,1.2,0.1)*CFrame.Angles(math.pi/0.9,0,0)
-		local knofe = obj1:Clone()
-		for i,v in pairs(obj1:GetChildren()) do
-			if v:IsA('BasePart') then
-			v.Transparency = 1
-			end
-		end
-		knofe.Parent = workspace
-		knofe.Name = "Projectile"
-		knofe.Grab.CFrame = CFrame.new(knofe.Grab.CFrame.p, mouse.Hit.p)*CFrame.Angles(0,math.pi/2,0)
-		knofe:FindFirstChild("Trail", true).Enabled = false
-		fireofjesUS = Instance.new("Fire", knofe.Grab)
-		local heck = Instance.new('BodyVelocity',knofe.Grab)
-		heck.Velocity = (knofe.Grab.CFrame*CFrame.Angles(0,math.pi/-2,0)).lookVector*120
-		local coru = coroutine.wrap(function()
-			wait(0.45)
-			if heck then
-				heck:Destroy()
-			end
-		end)
-		coru()
-		knofe["big ass knife"].Touched:connect(function(hit)
-			if hit.Parent ~= me and hit.Parent.Parent ~= me and hit.Transparency < 1 and knofe.Grab.CanCollide == false then
-				heck.Velocity = Vector3.new(0,0,0)
-				heck:Destroy()
-				for i,v in pairs(knofe:GetChildren()) do
-					if v:IsA('BasePart') then
-					v.CanCollide = true
-					end
-				end
-				local hum = hit.Parent:FindFirstChildOfClass('Humanoid')
-				if hum == nil then
-					hum = hit.Parent.Parent:FindFirstChildOfClass('Humanoid')
-				end
-				if knofe then
-					local coru = coroutine.wrap(function()
-						if hit then
-							local uno = Instance.new('Part',workspace)
-							local dos = Instance.new('Part',workspace)
-							uno.CFrame = hit.CFrame
-							dos.CFrame = knofe["big ass knife"].CFrame
-							local weld = Instance.new('Weld',knofe["big ass knife"])
-							weld.Part0 = hit
-							weld.Part1 = knofe["big ass knife"]
-							weld.C0 = uno.CFrame:toObjectSpace(dos.CFrame)
-							uno:Destroy()
-							dos:Destroy()
-						end
-					end)
-					coru()
-				end
-					local sound = Instance.new('Sound',knofe.Grab)
-					sound.Name = "BOOM"
-					sound.EmitterSize = 25
-					sound.SoundId = 'rbxassetid://476477344'
-					sound.Volume = 0.5
-					sound:Play()
-					local exppart = Instance.new("Part", game.Workspace)
-					exppart.Size = Vector3.new(0.2, 0.2, 0.2)
-					exppart.Anchored = true
-					exppart.CanCollide = false
-					exppart.CFrame = CFrame.new(knofe.Grab.CFrame.p)
-					exppart.Transparency = 1
-					local expaccent = Instance.new("ParticleEmitter", exppart)
-					expaccent.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 0)), ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))})
-					expaccent.LightEmission = 0.2
-					expaccent.LightInfluence = 0.3
-					expaccent.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(1, 0)})
-					expaccent.Acceleration = Vector3.new(0, 30, 0)
-					expaccent.Drag = 15
-					expaccent.LockedToPart = false
-					expaccent.Lifetime = NumberRange.new(0.5, 1.5)
-					expaccent.Rate = 2000
-					expaccent.Speed = NumberRange.new(0,0)
-					expaccent.SpreadAngle = Vector2.new(360, 360)
-					expaccent:Clone().Parent = exppart
-					expaccent:Clone().Parent = exppart
-					local exp = Instance.new('Explosion',game.Workspace)
-					exp.Position = knofe["big ass knife"].Position
-					exp.ExplosionType = Enum.ExplosionType.NoCraters
-					exp.BlastRadius = 5
-					exp.Visible = false
-					exp.BlastPressure = 0
-					exp.DestroyJointRadiusPercent = 0
-					exp.Hit:connect(function(hit)
-						if hit.Parent and hit.Parent ~= me and hit.Parent.Name ~= "bitch ass knife" then
-							wait(0.001)
-							tgt = hit
-							local coru=coroutine.wrap(function(tgtt)
-								local fireofgods = Instance.new("Fire", tgtt)
-								fireofgods.Size = 0
-								fireofgods.Heat = 0
-								local fireofgodsaccent = expaccent:Clone()
-								fireofgodsaccent.Parent = hit
-								fireofgodsaccent.Rate = 0
-								fireofgodsaccent.Speed = NumberRange.new(5, 50)
-								fireofgodsaccent.SpreadAngle = Vector2.new(45, 45)
-								fireofgodsaccent.Acceleration = Vector3.new(0, 20, 0)
-								
-								while fireofgods.Size < 10 do
-									fireofgods.Size = fireofgods.Size + 0.1
-									fireofgods.Heat = fireofgods.Heat + 0.1
-									fireofgodsaccent.Rate = fireofgodsaccent.Rate + 1
-									wait()
-								end
-								if hit.Parent and hit.Parent:FindFirstChildOfClass('Humanoid') == nil and hit.Parent.Parent:FindFirstChildOfClass('Humanoid') == nil then
-									print("lol")
-								elseif hit.Parent and hit.Parent:IsA('Accessory') then
-									for i,v in pairs(hit:GetChildren()) do
-										if v:IsA('SpecialMesh') then
-											v.TextureId = ""
-										end
-									end
-								end
-								hit.BrickColor = BrickColor.new("Black")
-								for i,v in pairs(hit.Parent:GetChildren()) do
-									if v:IsA('Shirt') or v:IsA('Pants') then
-										v:Destroy()
-									end
-								end
-								
-								while fireofgods.Size > 5 do
-									fireofgods.Size = fireofgods.Size - 0.1
-									fireofgods.Heat = fireofgods.Heat - 0.1
-									wait()
-								end
-								fireofgods:Destroy()
-								if hit.Parent then
-									if hit.Parent:FindFirstChildOfClass('Humanoid') == nil and hit.Parent.Parent:FindFirstChildOfClass('Humanoid') == nil then
-										local p = hit
-										fragmentate(p.CFrame,p.Size,p.BrickColor,p.Position,0.01,p.BackSurface,p.BottomSurface,p.FrontSurface,p.LeftSurface,p.RightSurface,p.TopSurface,p.Transparency,p.Reflectance,p.Material)
-										hit:Remove()
-									elseif hit.Parent:FindFirstChildOfClass('Humanoid') ~= nil then
-										print(hit.Name)
-										if hit.Name == "Torso" or hit.Name == "Head" then
-											print('ohhh YAAAA')
-											hit.Parent:FindFirstChildOfClass('Humanoid').Health = 100
-										end
-										wait()
-										killz(hit.Parent,hit.Name,nil,nil,false,false,true)
-									end
-								end
-							end)
-							coru(tgt)
-						end
-					end)
-					local explosionaccenttimeout = coroutine.wrap(function()
-						wait(0.2)
-						for i, exploodn in pairs(exppart:GetChildren()) do
-							exploodn.Enabled = false
-						end
-						wait(2)
-						for i, exploodn in pairs(exppart:GetChildren()) do
-							exploodn:Remove()
-						end
-					end)
-					explosionaccenttimeout()
-					for i,v in pairs(knofe:GetChildren()) do
-						if v:IsA('BasePart') then
-						v.Transparency = 1
-						end
-					end
-					exp.AncestryChanged:connect(function() knofe:Destroy() end)
-				coru()
-			end
-		end)
-		if finishnum == 1 then
-		for i= 0,1,0.1 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil then return end
-			weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0,0),i)
-			wait(0.001)
-		end
-		else
-			wait(0.1)
-		end
-		weld2.C0 = CFrame.new(-1.5,0,0)
-		for i,v in pairs(obj1:GetChildren()) do
-			if v:IsA('BasePart') then
-			v.Transparency = 0
-			end
-		end
-		weld2:Destroy()
-		rightshoulderz:Clone().Parent = me.Torso
-		end
-		acting = false
-		canClick = true
-	end)
-	coru()
+function RemoveOutlines(part)
+part.TopSurface, part.BottomSurface, part.LeftSurface, part.RightSurface, part.FrontSurface, part.BackSurface = 10, 10, 10, 10, 10, 10
 end
 
-function fireworkit()
-	local coru = coroutine.wrap(function()
-		acting = true
-		local ree = 1
-		if finishnum > 1 then
-			ree = 3
-		end
-		for i=1,ree do
-		local weld2 = Instance.new('Weld',me["Right Arm"])
-		weld2.Part0 = me["Right Arm"]
-		weld2.Part1 = me["Torso"]
-		weld2.C0 = CFrame.new(-1.5,0,0)
-		weld2.C0 = CFrame.new(-1.5,0.9,-0.5)*CFrame.Angles(-math.pi/0.75,-math.pi/8,0)
-		audio.SoundId = "rbxassetid://166083610"
-		audio.PlaybackSpeed = 1
-		audio.TimePosition = 0.1
-		audio:Play()
-		weld2.C0 = CFrame.new(-1.5,1.2,0.1)*CFrame.Angles(math.pi/0.9,0,0)
-		local knofe = obj1:Clone()
-		for i,v in pairs(obj1:GetChildren()) do
-			if v:IsA('BasePart') then
-			v.Transparency = 1
-			end
-		end
-		local sound = Instance.new('Sound',knofe.Grab)
-		sound.Volume = 0.25
-		sound.EmitterSize = 200
-		sound.MaxDistance = 300
-		sound.SoundId = 'rbxassetid://551051176'
-		sound:Play()
-		knofe.Parent = workspace
-		knofe.Name = "Projectile"
-		knofe.Grab.CFrame = CFrame.new(knofe.Grab.CFrame.p, mouse.Hit.p)*CFrame.Angles(0,math.pi/2,0)
-		local partic = Instance.new('ParticleEmitter',knofe.Grab)
-		partic.Color = ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.new(1,0,0)),ColorSequenceKeypoint.new(0.4,Color3.fromRGB(255,125,0)),ColorSequenceKeypoint.new(0.8,Color3.new(1,1,0)),ColorSequenceKeypoint.new(1,Color3.new(1,1,1))})
-		partic.LightEmission = 0.5
-		partic.LightInfluence = 0
-		partic.Size = NumberSequence.new({NumberSequenceKeypoint.new(0,0.5),NumberSequenceKeypoint.new(1,0.15)})
-		partic.Rotation = NumberRange.new(0,90)
-		partic.SpreadAngle = Vector2.new(5,5)
-		partic.Speed = NumberRange.new(20)
-		partic.Texture = 'rbxassetid://603193846'
-		partic.EmissionDirection = Enum.NormalId.Left
-		partic.Lifetime = NumberRange.new(0.5,1)
-		partic.Rate = 100
-		local heck = Instance.new('BodyVelocity',knofe.Grab)
-		heck.Velocity = (knofe.Grab.CFrame*CFrame.Angles(0,math.pi/-2,0)).lookVector*240
-		local coru=coroutine.wrap(function()
-		wait(1.2)
-			sound:Destroy()
-			local sound2 = Instance.new('Sound',workspace)
-			sound2.SoundId = 'rbxassetid://138080762'
-			sound2:Play()
-			if heck then
-				heck:Destroy()
-			end
-			for i,v in pairs(knofe:GetChildren()) do
-				v.Anchored = true
-			end
-			partic.Enabled = false
-			local colorscheme = math.random(1,4)
-			--1 - red & orange
-			--2 - blue & pink
-			--3 - green & purple
-			--4 - blue, red, white
-			local colar1 = Color3.fromRGB(255,0,0)
-			local colar2 = Color3.fromRGB(255,125,0)
-			local colar3 = Color3.fromRGB(255,255,255)
-			if colorscheme == 2 then
-				colar1 = Color3.fromRGB(0,132,255)
-				colar2 = Color3.fromRGB(243,105,255)
-			elseif colorscheme == 3 then
-				colar1 = Color3.fromRGB(76,255,0)
-				colar2 = Color3.fromRGB(128,0,255)
-			elseif colorscheme == 4 then
-				colar2 = Color3.fromRGB(0,132,255)
-			end
-			local partic2 = Instance.new('ParticleEmitter',knofe.Grab)
-			partic2.Color = ColorSequence.new({ColorSequenceKeypoint.new(0,colar1),ColorSequenceKeypoint.new(1,colar1)})
-			partic2.LightEmission = 0.5
-			partic2.LightInfluence = 0
-			partic2.Size = NumberSequence.new({NumberSequenceKeypoint.new(0,0.5),NumberSequenceKeypoint.new(1,0.1)})
-			partic2.Rotation = NumberRange.new(0,90)
-			partic2.SpreadAngle = Vector2.new(180,180)
-			partic2.Speed = NumberRange.new(20)
-			partic2.Texture = 'rbxassetid://603193846'
-			partic2.EmissionDirection = Enum.NormalId.Right
-			partic2.Lifetime = NumberRange.new(2,2.5)
-			partic2.Rate = 1000
-			partic2.Drag = 1
-			local partic3 = partic2:Clone()
-			partic3.Color = ColorSequence.new({ColorSequenceKeypoint.new(0,colar2),ColorSequenceKeypoint.new(1,colar2)})
-			partic3.Parent = knofe.Grab
-			if colorscheme == 4 then
-				local partic4 = partic2:Clone()
-				partic4.Color = ColorSequence.new({ColorSequenceKeypoint.new(0,colar3),ColorSequenceKeypoint.new(1,colar3)})
-				partic4.Parent = knofe.Grab
-			end
-			wait(1)
-			for i,v in pairs(knofe.Grab:GetChildren()) do
-				if v:IsA('ParticleEmitter') then
-					v.Enabled = false
-				end
-			end
-			sound:Destroy()
-			wait(2)
-			knofe:Destroy()
-		end)
-		coru()
-		wait(0.1)
-		weld2.C0 = CFrame.new(-1.5,0,0)
-		for i,v in pairs(obj1:GetChildren()) do
-			if v:IsA('BasePart') then
-			v.Transparency = 0
-			end
-		end
-		weld2:Destroy()
-		rightshoulderz:Clone().Parent = me.Torso
-		end
-		acting = false
-		canClick = true
-	end)
-	coru()
+function so(id,par,pit,vol)
+local sou = Instance.new("Sound", par or workspace)
+if par == chara then
+sou.Parent = chara.Torso
+end
+sou.Volume = vol
+sou.Pitch = pit or 1
+sou.SoundId = "rbxassetid://" .. id
+sou.PlayOnRemove = true
+sou:Destroy()
 end
 
-function paralyze()
-	local coru = coroutine.wrap(function()
-		if paralyzed == true then return end
-		paralyzed = true
-		local arm = me["Right Arm"]
-		local tors = grabbed.Torso
-		local arm2 = me["Left Arm"]
-		if arm:FindFirstChildOfClass('Weld') == nil or arm2:FindFirstChildOfClass('Weld') == nil then return end
-		doing = true
-		local weld2 = arm:FindFirstChildOfClass('Weld')
-		local weld3 = arm2:FindFirstChildOfClass('Weld')
-		local humanroot = me.HumanoidRootPart
-		for i = 0,1,0.075 do
-			weld2.C0 = weld2.C0:lerp(CFrame.new(-0.9, 0.80, -1.1)* CFrame.Angles(-2, 0, -1.5), i)
-			weld3.C0 = weld3.C0:lerp(CFrame.new(0.8, 1, -0.5)* CFrame.Angles(-1.4, 0, 1.1), i)
-			wait(0.01)
-		end
-		for i = 0,1,0.30 do
-			weld2.C0 = weld2.C0:lerp(CFrame.new(-0.9, 0.80, -1.1)* CFrame.Angles(-0.75, 0, -1.75), i)
-			weld3.C0 = weld3.C0:lerp(CFrame.new(0.8, 1, -0.5)* CFrame.Angles(-1.4, 0, 1.1), i)
-			wait(0.01)
-		end
-		killz(grabbed,'Left Leg')
-		killz(grabbed,'Left Arm')
-		killz(grabbed,'Right Leg')
-		killz(grabbed,'Right Arm')
-		
-		for i, v in pairs(grabbed:GetChildren()) do
-			if v.Name == "Part" then
-				v.CanCollide = false
-			end
-		end
-		
-		audio:Stop()
-		audio.SoundId = "rbxassetid://2801263"
-		tone = math.random(1, 3)
-		if tone == 1 then audio.PlaybackSpeed = 0.8 audio.TimePosition = 0 end
-		if tone == 2 then audio.PlaybackSpeed = 1 audio.TimePosition = 0 end
-		if tone == 3 then audio.PlaybackSpeed = 1.2 audio.TimePosition = 0 end
-		audio:Play()
-		
-		local bleedpart = Instance.new("Part", grabbed)
-		bleedpart.Size = Vector3.new(0.2, 0.2, 0.2)
-		bleedpart.Color = Color3.new(115/225, 115/225, 115/225)
-		bleedpart.CanCollide = false
-		bleedpart.Position = grabbed.Head.Position + Vector3.new(0, 1, 0)
-		bleedpart.Transparency = 1
-		
-		local bleedpartweld = Instance.new("Weld", grabbed.Torso)
-		bleedpartweld.Part0 = grabbed.Torso
-		bleedpartweld.Part1 = bleedpart
-		bleedpartweld.C0 = CFrame.Angles(-1, 0, -0.35) * CFrame.new(0, 1, 0.8)
-		local cuntruu=coroutine.wrap(function()
-			bleed(bleedpart)
-		end)
-		local thicc = coroutine.wrap(function()
-			wait(3)
-			bleedpart:Remove()
-		end)
-		cuntruu()
-		thicc()
-	
-		for i = 0,1,0.075 do
-			weld2.C0 = weld2.C0:lerp(CFrame.new(-0.9, 0.80, -1.1)* CFrame.Angles(-1.5, 0, -1.3), i)
-			weld3.C0 = weld3.C0:lerp(CFrame.new(0.8, 1, -0.5)* CFrame.Angles(-1.5, 0, 1.1), i)
-			wait(0.01)
-		end
-		acting = true
-		canClick = true
-		doing = false
-	end)
-	coru()
+--This is just for builds--
+New = function(Object, Parent, Name, Data)
+local Object = Instance.new(Object)
+for Index, Value in pairs(Data or {}) do
+Object[Index] = Value
+end
+Object.Parent = Parent
+Object.Name = Name
+return Object
+end
+Naifu = New("Part",chara,"Naifu",{BrickColor = BrickColor.new("Dark stone grey"),FormFactor = Enum.FormFactor.Custom,Size = Vector3.new(0.200000018, 0.200000003, 2.09999967),CFrame = CFrame.new(-46.1688423, 1.71234488, -46.3381615, -0.556669891, -0.663414657, 0.499999702, -0.766044796, 0.642787278, 7.3450633e-07, -0.321393907, -0.383021802, -0.866025567),CanCollide = false,BottomSurface = Enum.SurfaceType.Smooth,TopSurface = Enum.SurfaceType.Smooth,Color = Color3.new(0.388235, 0.372549, 0.384314),})
+Mesh = New("SpecialMesh",Naifu,"Mesh",{Scale = Vector3.new(0.5, 0.699999988, 0.5),VertexColor = Vector3.new(0.5, 0.5, 0.5),MeshId = "rbxassetid://54430772",TextureId = "rbxassetid://54430066",MeshType = Enum.MeshType.FileMesh,})
+Weld = New("ManualWeld",Naifu,"Weld",{Part0 = Naifu,Part1 = LeftArm,C0 = CFrame.new(0, 0, 0, -0.556669891, -0.766044796, -0.321393907, -0.663414657, 0.642787278, -0.383021802, 0.499999702, 7.3450633e-07, -0.866025567),C1 = CFrame.new(-0.0408859253, -1.28767514, 0.650009155, -0.866025388, 0, -0.500000238, 0, 1, 0, 0.500000238, 0, -0.866025388),})
+TEC9 = New("Part",chara,"TEC9",{BrickColor = BrickColor.new("Dark stone grey"),Transparency = 1,Transparency = 1,FormFactor = Enum.FormFactor.Custom,Size = Vector3.new(0.200000018, 1.20000005, 1.79999959),CFrame = CFrame.new(-56.3000031, 1.29999971, -46.6999931, -1, -1.00172471e-07, -1.61844298e-08, 5.16190539e-08, -8.19882651e-09, 1, -1.29974794e-07, 1, -4.67569983e-08),CanCollide = false,BottomSurface = Enum.SurfaceType.Smooth,TopSurface = Enum.SurfaceType.Smooth,Color = Color3.new(0.388235, 0.372549, 0.384314),})
+Mesh = New("SpecialMesh",TEC9,"Mesh",{Scale = Vector3.new(0.300000012, 0.300000012, 0.300000012),MeshId = "rbxassetid://742046473",TextureId = "rbxassetid://742046691",MeshType = Enum.MeshType.FileMesh,})
+Weld = New("ManualWeld",TEC9,"Weld",{Part0 = TEC9,Part1 = RightArm,C0 = CFrame.new(0, 0, 0, -1, 5.16190539e-08, -1.29974794e-07, -1.00172471e-07, -8.19882651e-09, 1, -1.61844298e-08, 1, -4.67569983e-08),C1 = CFrame.new(-0.0999984741, -1.70001817, -7.62939453e-06, -1, 0, 0, 0, 1, 0, 0, 0, -1),})
+DBarrel = New("Part",chara,"DBarrel",{BrickColor = BrickColor.new("Dark stone grey"),Transparency = 1,FormFactor = Enum.FormFactor.Custom,Size = Vector3.new(0.200000018, 0.799999952, 2.09999967),CFrame = CFrame.new(-42.2655792, 3.62635231, -28.7166176, 0.99998486, 0.00129485771, -0.00535738515, -0.00132099993, 0.999987245, -0.0048789978, 0.00535099953, 0.00488600042, 0.999973774),CanCollide = false,BottomSurface = Enum.SurfaceType.Smooth,TopSurface = Enum.SurfaceType.Smooth,Color = Color3.new(0.388235, 0.372549, 0.384314),})
+Mesh = New("SpecialMesh",DBarrel,"Mesh",{Scale = Vector3.new(0.00700000022, 0.00700000022, 0.00700000022),MeshId = "rbxassetid://438826329",TextureId = "rbxassetid://438826340",MeshType = Enum.MeshType.FileMesh,})
+Weld = New("ManualWeld",DBarrel,"Weld",{Part0 = DBarrel,Part1 = RightArm,C0 = CFrame.new(0, 0, 0, 0.99998486, -0.00132099993, 0.00535099953, 0.00129485771, 0.999987245, 0.00488600042, -0.00535738515, -0.0048789978, 0.999973774),C1 = CFrame.new(0.00952529907, -1.46699142, -0.100050688, -0.868691146, -0.00176300027, 0.495351046, -0.495353371, 0.00488599995, -0.868677914, -0.000888805604, -0.999986589, -0.00511773303),})
+
+local att1 = Instance.new("Attachment",Naifu)
+att1.Position = Vector3.new(0,.2,-.2)
+local att2 = Instance.new("Attachment",Naifu)
+att2.Position = Vector3.new(0,.1,1.5)
+local tr1 = Instance.new("Trail",Naifu)
+tr1.Color = ColorSequence.new(Color3.new(.5,.5,.5),Color3.new(1,1,1))
+tr1.Transparency = NumberSequence.new(0,1)
+tr1.Lifetime = .5
+tr1.Enabled = false
+tr1.Attachment0 = att1
+tr1.Attachment1 = att2
+
+if chara:FindFirstChild("FakeHeadM") then
+local CorruptFace = New("Decal",chara.FakeHeadM.FakeHead,"Corrupt",{Texture = "rbxassetid://1000657824",})
+chara.FakeHeadM.FakeHead.Normal:Destroy()
+chara.FakeHeadM.FakeHead.Lood:Destroy()
+chara.FakeHeadM.FakeHead.Rooped:Destroy()
+chara.FaysG:Destroy()
+chara.FakeHeadM.Ahoge:Destroy()
+for i,v in pairs(chara:GetDescendants()) do
+if v.Name == "SpecPart" or v.Name == "Ears1Part" then
+v:Destroy()
+elseif v.Name == "Ears2Part" then
+v.Transparency = 0
+end
+end
+end
+for i, v in pairs(chara:children()) do
+if v:IsA("Shirt") or v:IsA("Pants") then
+v:Destroy()
+elseif v.Name == "Chest" then
+for a, b in pairs(v:children()) do
+if b.Name ~= "Tail" then
+b.Transparency = 1
+end
+end
+end
+end
+local sh = Instance.new("Shirt",chara)
+local pn = Instance.new("Pants",chara)
+sh.ShirtTemplate = "rbxassetid://567462542"
+pn.PantsTemplate = "rbxassetid://1521666087"
+---------------------------
+
+function rayCast(Position, Direction, Range, Ignore)
+return game:service("Workspace"):FindPartOnRay(Ray.new(Position, Direction.unit * (Range or 999.999)), Ignore) 
+end 
+
+function FindNearestTorso(Position, Distance, SinglePlayer)
+if SinglePlayer then
+return (SinglePlayer.Head.CFrame.p - Position).magnitude < Distance
+end
+local List = {}
+for i, v in pairs(workspace:GetDescendants()) do
+if v:IsA("Model") then
+if v:findFirstChild("Head") then
+if v ~= chara then
+if (v.Head.Position - Position).magnitude <= Distance then
+table.insert(List, v)
+end 
+end 
+end 
+end 
+end
+return List
 end
 
-function explode()
-	local coru = coroutine.wrap(function()
-		acting = true
-		for i=1,finishnum do
-		local weld2 = Instance.new('Weld',me["Right Arm"])
-		weld2.Part0 = me["Right Arm"]
-		weld2.Part1 = me["Torso"]
-		weld2.C0 = CFrame.new(-1.5,0,0)
-		if finishnum == 1 then
-		for i = 0,1,0.05 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil then return end
-			weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0.9,-0.5)*CFrame.Angles(-math.pi/0.75,-math.pi/8,0),i)
-			wait(0.01)	
-		end
-		end
-		weld2.C0 = CFrame.new(-1.5,0.9,-0.5)*CFrame.Angles(-math.pi/0.75,-math.pi/8,0)
-		audio.SoundId = "rbxassetid://166083610"
-		audio.PlaybackSpeed = 1
-		audio.TimePosition = 0.1
-		audio:Play()
-		if finishnum == 1 then
-		for i = 0,1,0.5 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil then return end
-			weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,1.2,0.1)*CFrame.Angles(math.pi/0.9,0,0),i)
-			wait(0.001)	
-		end
-		end
-		weld2.C0 = CFrame.new(-1.5,1.2,0.1)*CFrame.Angles(math.pi/0.9,0,0)
-		local knofe = obj1:Clone()
-		for i,v in pairs(obj1:GetChildren()) do
-			if v:IsA('BasePart') then
-			v.Transparency = 1
-			end
-		end
-		knofe.Parent = workspace
-		knofe.Name = "Projectile"
-		knofe.Grab.CFrame = CFrame.new(knofe.Grab.CFrame.p, mouse.Hit.p)*CFrame.Angles(0,math.pi/2,0)
-		knofe:FindFirstChild("Trail", true).Enabled = false
-		local heck = Instance.new('BodyVelocity',knofe.Grab)
-		heck.Velocity = (knofe.Grab.CFrame*CFrame.Angles(0,math.pi/-2,0)).lookVector*120
-		local coru = coroutine.wrap(function()
-			wait(0.45)
-			if heck then
-				heck:Destroy()
-			end
-		end)
-		coru()
-		knofe["big ass knife"].Touched:connect(function(hit)
-			if hit.Parent ~= me and hit.Parent.Parent ~= me and hit.Transparency < 1 and knofe.Grab.CanCollide == false then
-				heck.Velocity = Vector3.new(0,0,0)
-				heck:Destroy()
-				for i,v in pairs(knofe:GetChildren()) do
-					if v:IsA('BasePart') then
-					v.CanCollide = true
-					end
-				end
-				local hum = hit.Parent:FindFirstChildOfClass('Humanoid')
-				if hum == nil then
-					hum = hit.Parent.Parent:FindFirstChildOfClass('Humanoid')
-				end
-				if hum then
-					tone = math.random(1, 3)
-					local sound = Instance.new('Sound',knofe.Grab)
-					if tone == 1 then sound.SoundId = "rbxassetid://220833967" end
-					if tone == 2 then sound.SoundId = "rbxassetid://220833976" end
-					if tone == 3 then sound.SoundId = "rbxassetid://220834000" end
-					sound.PlaybackSpeed = 1
-					sound:Play()
-				else
-					local sound = Instance.new('Sound',knofe.Grab)
-					sound.SoundId = 'rbxassetid://267585646'
-					sound:Play()
-				end
-				if knofe then
-					local coru = coroutine.wrap(function()
-						if hit then
-							local uno = Instance.new('Part',workspace)
-							local dos = Instance.new('Part',workspace)
-							uno.CFrame = hit.CFrame
-							dos.CFrame = knofe["big ass knife"].CFrame
-							local weld = Instance.new('Weld',knofe["big ass knife"])
-							weld.Part0 = hit
-							weld.Part1 = knofe["big ass knife"]
-							weld.C0 = uno.CFrame:toObjectSpace(dos.CFrame)
-							uno:Destroy()
-							dos:Destroy()
-						end
-					end)
-					coru()
-				end
-				local coru = coroutine.wrap(function()
-					for i=1,15,0.7 do
-						local sound = Instance.new('Sound',knofe.Grab)
-						if knofe then
-							if knofe.serration.BrickColor == BrickColor.new('Really red') then
-								for i, v in pairs(knofe:GetChildren()) do
-									if v.Name == "big ass knife" or v.Name == "serration" or v.Name == "knifetip1" or v.Name == "fricc" then
-										v.BrickColor = BrickColor.new('Lily white')
-										v.Material = Enum.Material.SmoothPlastic
-									end
-								end
-							else
-								for i,v in pairs(knofe:GetChildren()) do
-									if v.Name == "big ass knife" or v.Name == "serration" or v.Name == "knifetip1" or v.Name == "fricc" then
-										v.BrickColor = BrickColor.new('Really red')
-										v.Material = Enum.Material.Neon
-										sound.SoundId = 'rbxassetid://300473653'
-										sound.Volume = 0.75
-										sound.TimePosition = 0.05
-										sound.EmitterSize = 25
-										sound.PlaybackSpeed = 1
-										sound:Play()
-									end
-								end
-							end
-							wait(1/i)
-							sound:Destroy()
-						end
-					end
-					local sound = Instance.new('Sound',knofe.Grab)
-					sound.Name = "BOOM"
-					sound.EmitterSize = 25
-					sound.SoundId = 'rbxassetid://12222084'
-					sound.TimePosition = 0.1
-					sound.Volume = 0.5
-					sound:Play()
-					local exppart = Instance.new("Part", game.Workspace)
-					exppart.Size = Vector3.new(0.2, 0.2, 0.2)
-					exppart.Anchored = true
-					exppart.CanCollide = false
-					exppart.CFrame = CFrame.new(knofe.Grab.CFrame.p)
-					exppart.Transparency = 1
-					local expaccent = Instance.new("ParticleEmitter", exppart)
-					expaccent.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 0)), ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))})
-					expaccent.LightEmission = 0.2
-					expaccent.LightInfluence = 0.3
-					expaccent.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(1, 0)})
-					expaccent.Acceleration = Vector3.new(0, -8, 0)
-					expaccent.Drag = 15
-					expaccent.LockedToPart = true
-					expaccent.Lifetime = NumberRange.new(0.5, 1.5)
-					expaccent.Rate = 2000
-					expaccent.Speed = NumberRange.new(10, 150)
-					expaccent.SpreadAngle = Vector2.new(360, 360)
-					
-					local exp = Instance.new('Explosion',game.Workspace)
-					exp.Position = knofe["big ass knife"].Position
-					exp.ExplosionType = Enum.ExplosionType.NoCraters
-					exp.BlastRadius = 10
-					exp.BlastPressure = 100000
-					exp.DestroyJointRadiusPercent = 1
-					exp.Hit:connect(function(hit)
-						if hit.Parent and hit.Parent ~= me and hit.Parent:FindFirstChildOfClass('Humanoid') then
-							if hit.Parent:FindFirstChildOfClass('Humanoid') and hit.Name == "Torso" or hit.Name == "Head" then
-								hit.Parent:FindFirstChildOfClass('Humanoid').Health = 100
-							end
-							wait(0.001)
-							local coru=coroutine.wrap(function()
-							killz(hit.Parent,'Head',knofe,exp)
-							end)
-							coru()
-						elseif hit.Parent and hit.Parent ~= workspace and hit.Parent ~= me then
-							if hit.Parent.Name ~= "Projectile" then
-								print("lol")
-							end
-						elseif hit.Parent and hit.Parent ~= me then
-							print("lol")
-						end
-					end)
-					local explosionaccenttimeout = coroutine.wrap(function()
-						wait(0.2)
-						expaccent.Enabled = false
-						wait(2)
-						exppart:Remove()
-					end)
-					explosionaccenttimeout()
-					for i,v in pairs(knofe:GetChildren()) do
-						if v:IsA('BasePart') then
-						v.Transparency = 1
-						end
-					end
-					exp.AncestryChanged:connect(function() knofe:Destroy() end)
-				end)
-				coru()
-			end
-		end)
-		if finishnum == 1 then
-		for i= 0,1,0.1 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil then return end
-			weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0,0),i)
-			wait(0.001)
-		end
-		else
-			wait(0.1)
-		end
-		weld2.C0 = CFrame.new(-1.5,0,0)
-		for i,v in pairs(obj1:GetChildren()) do
-			if v:IsA('BasePart') then
-			v.Transparency = 0
-			end
-		end
-		weld2:Destroy()
-		rightshoulderz:Clone().Parent = me.Torso
-		end
-		acting = false
-		canClick = true
-	end)
-	coru()
+EffectModel = Create("Model"){
+Parent = chara,
+Name = "Effects",
+}
+
+--Effect Functions--
+Effects = {
+
+Block = function(cf,partsize,meshstart,meshadd,matr,colour,spin,inverse,factor)
+local p = Instance.new("Part",EffectModel)
+p.BrickColor = BrickColor.new(colour)
+p.Size = partsize
+p.Anchored = true
+p.CanCollide = false
+p.Material = matr
+p.CFrame = cf
+if inverse == true then
+p.Transparency = 1
+else
+p.Transparency = 0
+end
+local m = Instance.new("BlockMesh",p)
+m.Scale = meshstart
+coroutine.wrap(function()
+for i=0,1,factor do
+swait()
+if inverse == true then
+p.Transparency = 1-i
+else
+p.Transparency = i
+end
+m.Scale = m.Scale + meshadd
+if spin == true then
+p.CFrame = p.CFrame * CFrame.Angles(math.random(-50,50),math.random(-50,50),math.random(-50,50))
+end
+end
+p:Destroy()
+end)()
+return p
+end,
+
+Sphere = function(cf,partsize,meshstart,meshadd,matr,colour,inverse,factor)
+local p = Instance.new("Part",EffectModel)
+p.BrickColor = BrickColor.new(colour)
+p.Size = partsize
+p.Anchored = true
+p.CanCollide = false
+p.Material = matr
+p.CFrame = cf
+if inverse == true then
+p.Transparency = 1
+else
+p.Transparency = 0
+end
+local m = Instance.new("SpecialMesh",p)
+m.MeshType = "Sphere"
+m.Scale = meshstart
+coroutine.wrap(function()
+for i=0,1,factor do
+swait()
+if inverse == true then
+p.Transparency = 1-i
+else
+p.Transparency = i
+end
+m.Scale = m.Scale + meshadd
+end
+p:Destroy()
+end)()
+return p
+end,
+
+Cylinder = function(cf,partsize,meshstart,meshadd,matr,colour,inverse,factor)
+local p = Instance.new("Part",EffectModel)
+p.BrickColor = BrickColor.new(colour)
+p.Size = partsize
+p.Anchored = true
+p.CanCollide = false
+p.Material = matr
+p.CFrame = cf
+if inverse == true then
+p.Transparency = 1
+else
+p.Transparency = 0
+end
+local m = Instance.new("CylinderMesh",p)
+m.Scale = meshstart
+coroutine.wrap(function()
+for i=0,1,factor do
+swait()
+if inverse == true then
+p.Transparency = 1-i
+else
+p.Transparency = i
+end
+m.Scale = m.Scale + meshadd
+end
+p:Destroy()
+end)()
+return p
+end,
+
+Wave = function(cf,meshstart,meshadd,colour,spin,inverse,factor)
+local p = Instance.new("Part",EffectModel)
+p.BrickColor = BrickColor.new(colour)
+p.Size = Vector3.new()
+p.Anchored = true
+p.CanCollide = false
+p.CFrame = cf
+if inverse == true then
+p.Transparency = 1
+else
+p.Transparency = 0
+end
+local m = Instance.new("SpecialMesh",p)
+m.MeshId = "rbxassetid://20329976"
+m.Scale = meshstart
+coroutine.wrap(function()
+for i=0,1,factor do
+swait()
+if inverse == true then
+p.Transparency = 1-i
+else
+p.Transparency = i
+end
+m.Scale = m.Scale + meshadd
+p.CFrame = p.CFrame * CFrame.Angles(0,math.rad(spin),0)
+end
+p:Destroy()
+end)()
+return p
+end,
+
+Ring = function(cf,meshstart,meshadd,colour,inverse,factor)
+local p = Instance.new("Part",EffectModel)
+p.BrickColor = BrickColor.new(colour)
+p.Size = Vector3.new()
+p.Anchored = true
+p.CanCollide = false
+p.CFrame = cf
+if inverse == true then
+p.Transparency = 1
+else
+p.Transparency = 0
+end
+local m = Instance.new("SpecialMesh",p)
+m.MeshId = "rbxassetid://3270017"
+m.Scale = meshstart
+coroutine.wrap(function()
+for i=0,1,factor do
+swait()
+if inverse == true then
+p.Transparency = 1-i
+else
+p.Transparency = i
+end
+m.Scale = m.Scale + meshadd
+end
+p:Destroy()
+end)()
+return p
+end,
+
+Meshed = function(cf,meshstart,meshadd,colour,meshid,textid,spin,inverse,factor)
+local p = Instance.new("Part",EffectModel)
+p.BrickColor = BrickColor.new(colour)
+p.Size = Vector3.new()
+p.Anchored = true
+p.CanCollide = false
+p.CFrame = cf
+if inverse == true then
+p.Transparency = 1
+else
+p.Transparency = 0
+end
+local m = Instance.new("SpecialMesh",p)
+m.MeshId = meshid
+m.TextureId = textid
+m.Scale = meshstart
+coroutine.wrap(function()
+for i=0,1,factor do
+swait()
+if inverse == true then
+p.Transparency = 1-i
+else
+p.Transparency = i
+end
+m.Scale = m.Scale + meshadd
+p.CFrame = p.CFrame * CFrame.Angles(0,math.rad(spin),0)
+end
+p:Destroy()
+end)()
+return p
+end,
+
+Explode = function(cf,partsize,meshstart,meshadd,matr,colour,move,inverse,factor)
+local p = Instance.new("Part",EffectModel)
+p.BrickColor = BrickColor.new(colour)
+p.Size = partsize
+p.Anchored = true
+p.CanCollide = false
+p.Material = matr
+p.CFrame = cf * CFrame.Angles(math.rad(math.random(-360,360)),math.rad(math.random(-360,360)),math.rad(math.random(-360,360)))
+if inverse == true then
+p.Transparency = 1
+else
+p.Transparency = 0
+end
+local m = Instance.new("SpecialMesh",p)
+m.MeshType = "Sphere"
+m.Scale = meshstart
+coroutine.wrap(function()
+for i=0,1,factor do
+swait()
+if inverse == true then
+p.Transparency = 1-i
+else
+p.Transparency = i
+end
+m.Scale = m.Scale + meshadd
+p.CFrame = p.CFrame * CFrame.new(0,move,0)
+end
+p:Destroy()
+end)()
+return p
+end,
+
+}
+
+function chatfunc(text)
+coroutine.wrap(function()
+if chara:FindFirstChild("TalkingBillBoard")~= nil then
+chara:FindFirstChild("TalkingBillBoard"):destroy()
+end
+local naeeym2 = Instance.new("BillboardGui",chara)
+naeeym2.Size = UDim2.new(0,100,0,40)
+naeeym2.StudsOffset = Vector3.new(0,3,0)
+naeeym2.Adornee = chara.Head
+naeeym2.Name = "BLABLABLA"
+local tecks2 = Instance.new("TextLabel",naeeym2)
+tecks2.BackgroundTransparency = 1
+tecks2.BorderSizePixel = 0
+tecks2.Text = ""
+tecks2.Font = "Antique"
+tecks2.FontSize = "Size24"
+tecks2.TextStrokeTransparency = 0
+tecks2.TextColor3 = Color3.new(0,0,0)
+tecks2.TextStrokeColor3 = Color3.new(1,0,0)
+tecks2.Size = UDim2.new(1,0,0.5,0)coroutine.wrap(function()
+while tecks2 ~= nil do
+swait()
+tecks2.Position = UDim2.new(0,math.random(-3,3),0,math.random(-3,3))
+end
+end)()
+for i = 1,string.len(text),1 do
+tecks2.Text = string.sub(text,1,i)
+swait()
+end
+swait(30)
+for i = 1, 5 do
+swait()
+tecks2.Position = tecks2.Position - UDim2.new(0,0,.05,0)
+tecks2.TextStrokeTransparency = tecks2.TextStrokeTransparency +.2
+tecks2.TextTransparency = tecks2.TextTransparency + .2
+end
+naeeym2:Destroy()
+end)()
 end
 
-function release()
-	if grabbed.Torso:FindFirstChild("TargetWeld") == nil or grabbed:FindFirstChildOfClass('Humanoid').Health <= 0 then return end
-	targetweld = grabbed.Torso.TargetWeld
-	local ree= grabbed:FindFirstChild("Left Arm")
-	targetweld2 = nil
-	if ree and ree:FindFirstChild("Weld") then
-		targetweld2 = ree.Weld
-	end
-	for i, v in pairs(grabbed:GetChildren()) do
-		if v.Name == "Part" then
-			v.CanCollide = true
-		end
-	end
-	paralyzed = false
-	local doit = coroutine.wrap(function()
-	local arm = me["Right Arm"]
-	local tors = grabbed.Torso
-	local arm2 = me["Left Arm"]
-	if arm:FindFirstChildOfClass('Weld') == nil or arm2:FindFirstChildOfClass('Weld') == nil then return end
-	doing = true
-	local weld2 = arm:FindFirstChildOfClass('Weld')
-	local weld3 = arm2:FindFirstChildOfClass('Weld')
-	local humanroot = me.HumanoidRootPart
-	
-	if grabbed:FindFirstChildOfClass('Humanoid') then
-		grabbed:FindFirstChildOfClass('Humanoid').PlatformStand = false
-	end
-	
-	rightshoulderz:Clone().Parent = me.Torso
-	leftshoulderz:Clone().Parent = me.Torso
-	if grabbed:FindFirstChildOfClass('Humanoid') then
-		grabbed:FindFirstChildOfClass('Humanoid').Name = "Humanoid"
-		grabbed:FindFirstChildOfClass('Humanoid').JumpPower = 50
-		grabbed:FindFirstChildOfClass('Humanoid').WalkSpeed = 16
-		grabbed:FindFirstChildOfClass('Humanoid').PlatformStand = false
-	end
-	grabbed = nil
-	
-	if humanroot:FindFirstChild('Holder') then
-		humanroot.Holder:Destroy()
-	end
-	
-	for i = 0,1,0.1 do
-		if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld2 == nil or weld3 == nil then return end
-		weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0,0),i)
-		weld3.C0 = weld3.C0:lerp(CFrame.new(1.5,0,0),i)
-		targetweld.C0 = targetweld.C0:lerp(CFrame.new(0, 1.5, 0)*CFrame.Angles(0, 0, 0), i)
-		if targetweld2 then
-			targetweld2.C0 = targetweld2.C0:lerp(CFrame.new(-1.5, 0, 0)*CFrame.Angles(0, 0, 0), i)
-		end
-		wait(0.01)
-	end
-	
-	knifeweld.C1 = CFrame.fromEulerAnglesXYZ(1.55, math.rad(-90), 1.55) * CFrame.new(0, 0.95, 0.2)
-	weld2:Destroy()
-	weld3:Destroy()
-	targetweld:Remove()
-	if targetweld2 then
-		targetweld2:Remove()
-	end
-	if rightshoulder then
-	rightshoulder:Clone().Parent = tors
-	end
-	if leftshoulder then
-	leftshoulder:Clone().Parent = tors
-	end
-	headweld:Clone().Parent = tors
-	rightshoulderz:Clone().Parent = me.Torso
-			leftshoulderz:Clone().Parent = me.Torso
-	acting = false
-	canClick = true
-	doing = false
-	end)
-	doit()
+function GetDudesTorso(c)
+local torsy = (c:findFirstChild("Torso") or c:findFirstChild("UpperTorso"))
+if torsy ~= nil then
+return torsy
+end
 end
 
-function stabwithpassion()
-	local doit = coroutine.wrap(function()
-		if me:FindFirstChild('Right Arm') and me:FindFirstChild('Torso') and me:FindFirstChild('HumanoidRootPart') and me:FindFirstChild('Left Arm') then
-			acting = true
-			me:FindFirstChildOfClass('Humanoid').WalkSpeed = me:FindFirstChildOfClass('Humanoid').WalkSpeed + 10
-			local arm = me["Right Arm"]
-			local tors = me.Torso
-			local arm2 = me["Left Arm"]
-			local humanroot = me.HumanoidRootPart
-			local weld = Instance.new('Weld',tors)
-			weld.Part0 = tors
-			weld.Part1 = humanroot
-			weld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0, 0, 0)
-			local weld2 = Instance.new('Weld',arm)
-			weld2.Part0 = arm
-			weld2.Part1 = tors
-			weld2.C0 = CFrame.new(-1.5,0,0) * CFrame.Angles(0, 0, 0)
-			local weld3 = Instance.new('Weld',arm2)
-			weld3.Part0 = arm2
-			weld3.Part1 = tors
-			weld3.C0 = CFrame.new(1.5,0,-0.3) * CFrame.Angles(0.3,0.1,0)
-
-			for i = 0,1,0.15 do
-				if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil or weld2 == nil or humanroot == nil then return end
-				weld.C0 = weld.C0:lerp(CFrame.new(0,0,0)*CFrame.Angles(0,math.rad(20),0),i)
-				weld2.C0 = weld2.C0:lerp(CFrame.new(-1.2,1.3,0.4)*CFrame.Angles(0.5,0,-1.2),i)
-				knifeweld.C1 = knifeweld.C1:lerp(CFrame.fromEulerAnglesXYZ(1.55, math.rad(90), -1.55) * CFrame.new(0, 0.95, 0), i)
-				wait(0.01)
-			end
-			wait(0.001)
-			trail.Enabled = true
-			stabbing = true
-			audio2.SoundId = 'rbxassetid://608537390'
-			audio2:Play()
-			for i = 0,1,0.2 do
-				if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil or weld2 == nil or humanroot == nil then return end
-				weld.C0 = weld.C0:lerp(CFrame.new(0,0,0)*CFrame.Angles(0,math.rad(-45),0),i)
-				weld2.C0 = weld2.C0:lerp(CFrame.new(-1.6,0.8,-1)*CFrame.Angles(math.rad(-90),0,-1),i)
-				wait(0.01)
-			end
-			trail.Enabled = false
-			wait(0.1)
-			me:FindFirstChildOfClass('Humanoid').WalkSpeed = me:FindFirstChildOfClass('Humanoid').WalkSpeed - 10
-			stabbing = false
-			wait(0.001)
-			for i = 0,1,0.075 do
-				if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil or weld2 == nil or humanroot == nil then return end
-				weld.C0 = weld.C0:lerp(CFrame.new(0,0,0)*CFrame.Angles(0,0,0),i)
-				weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0,0)*CFrame.Angles(0,0,0),i)
-				weld3.C0 = weld3.C0:lerp(CFrame.new(1.5,0,0)*CFrame.Angles(0,0,0),i)
-				knifeweld.C1 = knifeweld.C1:lerp(CFrame.fromEulerAnglesXYZ(1.55, math.rad(-90), 1.55) * CFrame.new(0, 0.95, 0), i)
-				wait(0.01)
-			end
-		weld:Destroy()
-		weld2:Destroy()
-		weld3:Destroy()
-		torsojoint:Clone().Parent = humanroot
-		rightshoulderz:Clone().Parent = me.Torso
-		leftshoulderz:Clone().Parent = me.Torso
-		canClick = true
-		hit = false
-		acting = false
-		end
-	end)
-	doit()
+function BodyVel(part,faws)
+local bodyvel = Instance.new("BodyVelocity",part)
+local pep = 10000000
+bodyvel.P = pep
+bodyvel.MaxForce = Vector3.new(pep,pep,pep)
+bodyvel.Velocity = faws
+debby:AddItem(bodyvel,.2)
 end
 
-function stab()
-	local doit = coroutine.wrap(function()
-		if me:FindFirstChild('Right Arm') and me:FindFirstChild('Torso') and me:FindFirstChild('HumanoidRootPart') and me:FindFirstChild('Left Arm') then
-			acting = true
-			me:FindFirstChildOfClass('Humanoid').WalkSpeed = me:FindFirstChildOfClass('Humanoid').WalkSpeed + 3
-			local arm = me["Right Arm"]
-			local tors = me.Torso
-			local arm2 = me["Left Arm"]
-			local humanroot = me.HumanoidRootPart
-			local weld = Instance.new('Weld',tors)
-			weld.Part0 = tors
-			weld.Part1 = humanroot
-			weld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0, 0, 0)
-			local weld2 = Instance.new('Weld',arm)
-			weld2.Part0 = arm
-			weld2.Part1 = tors
-			weld2.C0 = CFrame.new(-1.5,0,0) * CFrame.Angles(0, 0, 0)
-			local weld3 = Instance.new('Weld',arm2)
-			weld3.Part0 = arm2
-			weld3.Part1 = tors
-			weld3.C0 = CFrame.new(1.5,0,-0.3) * CFrame.Angles(0.3,0.1,0)
-
-			for i = 0,1,0.1 do
-				if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil or weld2 == nil or humanroot == nil then return end
-				weld.C0 = weld.C0:lerp(CFrame.new(0,0,0)*CFrame.Angles(0,0.3,0),i)
-				weld2.C0 = weld2.C0:lerp(CFrame.new(-1.2,1.3,0.4)*CFrame.Angles(0.5,0,-1.2),i)
-				wait(0.01)
-			end
-			wait(0.001)
-			trail.Enabled = true
-			stabbing = true
-			audio2.SoundId = 'rbxassetid://608537390'
-			audio2:Play()
-			for i = 0,1,0.25 do
-				if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil or weld2 == nil or humanroot == nil then return end
-				weld.C0 = weld.C0:lerp(CFrame.new(0,0,0)*CFrame.Angles(0,-0.3,0),i)
-				weld2.C0 = weld2.C0:lerp(CFrame.new(-1.6,0.8,0.5)*CFrame.Angles(-0.5,0,-0.5),i)
-				wait(0.01)
-			end
-			trail.Enabled = false
-			wait(0.1)
-			me:FindFirstChildOfClass('Humanoid').WalkSpeed = me:FindFirstChildOfClass('Humanoid').WalkSpeed - 3
-			for i = 0,1,0.25 do
-				if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil or weld2 == nil or humanroot == nil then return end
-				weld.C0 = weld.C0:lerp(CFrame.new(0,0,0)*CFrame.Angles(0,0.3,0),i)
-				weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0.6,-0.3)*CFrame.Angles(0.5,0,-0.5),i)
-				wait(0.01)
-			end
-			stabbing = false
-			wait(0.001)
-			for i = 0,1,0.05 do
-				if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil or weld2 == nil or humanroot == nil then return end
-				weld.C0 = weld.C0:lerp(CFrame.new(0,0,0)*CFrame.Angles(0,0,0),i)
-				weld2.C0 = weld2.C0:lerp(CFrame.new(-1.5,0,0)*CFrame.Angles(0,0,0),i)
-				weld3.C0 = weld3.C0:lerp(CFrame.new(1.5,0,0)*CFrame.Angles(0,0,0),i)
-				wait(0.01)
-			end
-		weld:Destroy()
-		weld2:Destroy()
-		weld3:Destroy()
-		torsojoint:Clone().Parent = humanroot
-		rightshoulderz:Clone().Parent = me.Torso
-		leftshoulderz:Clone().Parent = me.Torso
-		canClick = true
-		hit = false
-		acting = false
-		end
-	end)
-	doit()
+function Dmg(dude,dmg,env,faws,trip,efftyp,toim)
+if dude and dude ~= chara and dude.Name ~= "CKbackup" and dude.Name ~= "Nebula_Zorua" and dude.Name ~= "Salvo_Starly" then
+if dude:FindFirstChild("HITO") then return end
+local debounce = Instance.new("BoolValue",dude)
+debounce.Name = "HITO"
+debby:AddItem(debounce,toim)
+local hum = dude:FindFirstChildOfClass("Humanoid")
+local dam = -math.huge
+local teksu = "-"..dam
+if hum then
+local finhel = hum.Health - dam
+if finhel <= 0 and dude:FindFirstChild("DEATHED")==nil then
+Instance.new("BoolValue",dude).Name = "DEATHED"
+local soaa = Instance.new("Sound",dude.Head)
+local cho = math.random(1,5)
+if cho == 1 then
+soaa.SoundId = "rbxassetid://111896685"
+elseif cho == 2 then
+soaa.SoundId = "rbxassetid://535528169"
+elseif cho == 3 then
+soaa.SoundId = "rbxassetid://1080363252"
+elseif cho == 4 then
+soaa.SoundId = "rbxassetid://147758746"
+elseif cho == 5 then
+soaa.SoundId = "rbxassetid://626777433"
+soaa.Volume = .2
+soaa.TimePosition = 1
 end
-function hardrelease()
-	rightshoulderz:Clone().Parent = me.Torso
-	leftshoulderz:Clone().Parent = me.Torso
-	if me:FindFirstChild('Right Arm') then
-	for i,v in pairs(me["Right Arm"]:GetChildren()) do
-		if v:IsA('Weld') then
-			v:Destroy()
-		end
-	end
-	end
-	if me:FindFirstChild('Left Arm') then
-	for i,v in pairs(me["Left Arm"]:GetChildren()) do
-		if v:IsA('Weld') then
-			v:Destroy()
-		end
-	end
-	end
-	acting = false
-	canClick = true
-	doing = false
-	grabbed = nil
+game:service'Debris':AddItem(soaa,6)
+soaa:Play()
 end
-function unequip()
-	local doit = coroutine.wrap(function()
-	if me:FindFirstChild('Right Arm') and me:FindFirstChild('Torso') then
-		acting = true
-		local arm = me["Right Arm"]
-		local arm2 = me["Left Arm"]
-		local tors = me.Torso
-		local weld = Instance.new('Weld',arm)
-		weld.Part0 = arm
-		weld.Part1 = tors
-		weld.C0 = CFrame.new(-1.5,0,0)
-		local weld2 = Instance.new("Weld", arm2)
-		weld2.Part0 = arm2
-		weld2.Part1 = tors
-		weld2.C0 = CFrame.new(1.5, 0, 0)
-		wait(0.001)
-		trail.Enabled = true
-		for i = 0,1,0.1 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil then return end
-			weld.C0 = weld.C0:lerp(CFrame.new(-0.2,0.2,-0.5)*CFrame.Angles(0,-3.1,0.9),i)
-			weld2.C0 = weld2.C0:lerp(CFrame.new(1.5, 0.6, 0) * CFrame.Angles(0,0,0.5),i)
-			wait(0.001)
-		end
-		trail.Enabled = false
-		wait(0.25)
-		for i = 0,1,0.1 do
-			if me:FindFirstChild('Right Arm') == nil or me:FindFirstChild('Torso') == nil or weld == nil then return end
-			weld.C0 = weld.C0:lerp(CFrame.new(-1.5,0,0),i)
-			weld2.C0 = weld2.C0:lerp(CFrame.new(1.5, 0, 0), i)
-			wait(0.01)
-		end
-		weld:Destroy()
-		weld2:Remove()
-		if tors ~= nil then
-			rightshoulderz:Clone().Parent = me.Torso
-			leftshoulderz:Clone().Parent = me.Torso
-		end
-		acting = false
-	end
-	end)
-	doit()
+hum.Health = hum.Health - dam
+end
+coroutine.wrap(function()
+local naeeym2 = Instance.new("BillboardGui",dude)
+naeeym2.Size = UDim2.new(0,100,0,40)
+naeeym2.StudsOffset = Vector3.new(0,3,0)
+naeeym2.Adornee = dude:FindFirstChild("Head")
+naeeym2.Name = "TalkingBillBoard"
+local tecks2 = Instance.new("TextLabel",naeeym2)
+tecks2.BackgroundTransparency = 1
+tecks2.BorderSizePixel = 0
+tecks2.Text = teksu
+tecks2.Font = "Antique"
+tecks2.TextSize = 24
+tecks2.TextStrokeTransparency = 0
+tecks2.TextColor3 = Color3.new(0,0,0)
+tecks2.TextStrokeColor3 = Color3.new(1,0,0)
+tecks2.Size = UDim2.new(1,0,0.5,0)
+swait(10)
+for i = 0,1,.05 do
+swait()
+tecks2.Position = tecks2.Position - UDim2.new(0,0,.005,0)
+tecks2.TextStrokeTransparency = i
+tecks2.TextTransparency = i
+end
+naeeym2:Destroy()
+end)()
+local torsy = GetDudesTorso(dude)
+if torsy then
+for i=1,dam/5 do
+local blp = Instance.new("Part",EffectModel)
+blp.Size = Vector3.new(.3,.3,.3)
+blp.BrickColor = BrickColor.new("Crimson")
+blp.CFrame = torsy.CFrame
+blp.Velocity = torsy.CFrame.lookVector*5
+coroutine.wrap(function()
+swait(10)
+blp.Orientation = Vector3.new(0,blp.Orientation.y,0)
+for i=0,1,.1  do
+swait()
+blp.Transparency = i
+blp.Size = blp.Size + Vector3.new(.02,-.02,.02)
+end
+blp:Destroy()
+end)()
+end
+if efftyp == "Blunt" then
+puncheff(torsy)
+elseif efftyp == "Sharp" then
+slasheff(torsy)
+end
+if faws ~= 0 then
+BodyVel(torsy,faws)
+end
+if trip == true then
+torsy.CFrame = torsy.CFrame * CFrame.Angles(math.rad(-90),0,0)
+torsy.RotVelocity = Vector3.new(math.random(-50,50),math.random(-50,50),math.random(-50,50))
+end
+end
+end
 end
 
-mouse.KeyDown:connect(function(key)
-	if usable == true then
-	if key == "z" then
-		if active == false and acting == false then
-			active = true
-			if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-			notify("KNIFE EQUIPPED",false)
-			audio:Stop()
-			audio.SoundId = 'rbxassetid://608618332'
-			equip()
-			wait(0.6)
-			audio:Play()
-			knifeweld.Part0 = me["Right Arm"]
-			knifeweld.C1 = CFrame.fromEulerAnglesXYZ(1.55, math.rad(-90), 1.55) * CFrame.new(0, 0.95, 0)
-		elseif acting == false then
-			active = false
-			if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-			audio:Stop()
-			audio.SoundId = 'rbxassetid://608538233'
-			unequip()
-			notify("KNIFE UNEQUIPPED",false)
-			wait(0.3)
-			audio:Play()
-			knifeweld.Part0 = me.Torso
-			knifeweld.C1 = CFrame.Angles(0,math.rad(90),0) * CFrame.new(1, 0.8, 0.55)
-			canClick = true
-		end
-	elseif key == "f" then
-		if mode == 'kill' or active == false then return end
-		mode = "kill"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		notify("MODE || KILL || [F]",false)
-	elseif key == "e" then
-		if mode == 'throw' or active == false then return end
-		mode = "throw"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		notify("MODE || PUSH || [E]",false)
-	elseif key == "q" then
-		if mode == 'release' or active == false then return end
-		mode = "release"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		notify("MODE || RELEASE || [Q]",false)
-	elseif key == "x" then
-		if mode == 'stab' or active == false or acting == true then return end
-		mode = "stab"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		notify("MODE || STAB || [X]",false)
-	elseif key == "c" then
-		if mode == 'fling' or active == false or acting == true then return end
-		mode = "fling"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		notify("MODE || THROW || [C]",false)
-	elseif key == "b" then
-		if mode == 'instasplode' or active == false or acting == true then return end
-		mode = "instasplode"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		notify("MODE || MOLOTOV || [B]",false)
-	elseif key == "r" then
-		if mode == 'paralyze' or active == false then return end
-		mode = "paralyze"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		notify("MODE || PARALYZE || [R]",false)
-	elseif key == "v" then
-		if mode == 'explode' or active == false or acting == true then return end
-		mode = "explode"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		notify("MODE || EXPLODE || [V]",false)
-	elseif key == "k" then
-		if mode == 'suicide' or active == false or acting == true then return end
-		mode = "suicide"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		notify("MODE || SUICIDE || [K]",false)
-	elseif key == "h" then
-		if mode == 'firework' or active == false or acting == true then return end
-		mode = "firework"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		notify("MODE || FIREWORK || [H]",false)
-	elseif key == "g" then
-		if mode == 'finish' or active == false then return end
-		mode = "finish"
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		local welp = "ON"
-		if finishnum == 1 then
-			welp = "OFF"
-		end
-		notify("MODE || FINISH || [G] || "..welp,false)
-	elseif key == "n" then
-		if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-		if zombiemode == false then
-			notify("ZOMBIE MODE ON || [N]",false)
-			zombiemode = true
-		else
-			notify("ZOMBIE MODE OFF || [N]",false)
-			zombiemode = false
-		end
-	elseif key == "m" then
-		if finishnum == 1 then
-			finishnum = 15
-			if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-			notify("PSYCHOPATH MODE ON || [M]",false)
-			if cancolorfilter then
-			local Sp00kyGui = Instance.new("ScreenGui")
-			local ImageLabel = Instance.new("ImageLabel")
+function MagnitudeDmg(par,magni,dmg,env,faws,trip,efftyp,toim)
+for _, c in pairs(workspace:GetDescendants()) do
+local hum = c:FindFirstChildOfClass("Humanoid")
+if hum ~= nil and c:FindFirstChild("IsTeamMateOfCK")==nil and c.Name ~= "CKbackup" and c.Name ~= "Nebula_Zorua" and c.Name ~= "Salvo_Starly" then
+local head = GetDudesTorso(c)
+if head ~= nil then
+local targ = head.Position - par.Position
+local mag = targ.magnitude
+if magni >= mag and c ~= chara then
+Dmg(c,dmg,env,faws,trip,efftyp,toim)
+end
+end
+end
+end
+end
 
-			-- Properties
+function puncheff(par)
+if par.Parent:FindFirstChild("DebounceHit")==nil then
+so(386946017,par,math.random(80,120)/100,1)
+Effects.Sphere(par.CFrame,Vector3.new(1,1,1),Vector3.new(1,1,1),Vector3.new(2,2,2),"Neon","White",false,.1)
+end
+end
 
-			Sp00kyGui.Parent = playergui
-			Sp00kyGui.Name = "REEEEEEEE"
+function slasheff(par)
+if par.Parent:FindFirstChild("DebounceHit")==nil then
+local cho = math.random(1,3)
+if cho == 1 then
+so(444667824,par,1,1)
+elseif cho == 2 then
+so(444667844,par,1,1)
+elseif cho == 3 then
+so(444667859,par,1,1)
+end
+--function(cf,partsize,meshstart,meshadd,matr,colour,factor)
+Effects.Sphere(par.CFrame*CFrame.Angles(math.random(0,360),math.random(0,360),math.random(0,360)),Vector3.new(.5,.5,.5),Vector3.new(1,0,1),Vector3.new(0,5,0),"Neon","Really red",false,.1)
+end
+end
 
-			ImageLabel.Parent = Sp00kyGui
-			ImageLabel.BackgroundColor3 = Color3.new(1, 1, 1)
-			ImageLabel.BackgroundTransparency = 1
-			ImageLabel.Size = UDim2.new(1, 0, 1, 0)
-			ImageLabel.Image = "rbxassetid://74443700"
-			ImageLabel.ImageColor3 = Color3.new(1, 0, 0)
-			end
-			if canbackgroundmusic == true then
-				local sound = Instance.new('Sound',playergui)
-				sound.Name = 'PSYCHOPAAAATH'
-				sound.SoundId = 'rbxassetid://220875210'
-				sound.Looped = true
-				sound.Volume = 0.5
-				sound:Play()
-			end
-		else
-			finishnum = 1
-			if playergui:FindFirstChild('Notification') then playergui.Notification:Destroy() end
-			notify("PSYCHOPATH MODE OFF || [M]",false)
-			for i,v in pairs(playergui:GetChildren()) do
-				if v.Name == "REEEEEEEE" then
-					v:Destroy()
-				end
-			end
-			local thisniggarighthere = playergui:FindFirstChild('PSYCHOPAAAATH')
-			if thisniggarighthere then thisniggarighthere:Destroy() end
-		end
-	end
-	end
+local mus = Instance.new("Sound",Head)
+mus.Name = "mus"
+mus.SoundId = "rbxassetid://581195737"
+mus.Looped = true
+mus.Volume = 1
+mus:Play()
+
+coroutine.wrap(function()
+chatfunc("I'm tired of all of this crap..")
+swait(90)
+chatfunc("Now the day of reckoning has begun..")
+swait(90)
+chatfunc("This shall be my finest hour..")
+swait(90)
+chatfunc("ICH BIN GOTT! BERZERKER!")
+end)()
+
+function smek()
+attack = true
+Humanoid.WalkSpeed = 16
+for i=0,1,.1 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(0.0506498702, -5.11459177e-07, -0.0829713419, 0.76604414, 0, 0.642788053, -2.68192082e-07, 1.00000834, 3.19618522e-07, -0.642793417, -4.17232513e-07, 0.766050518),
+CFrame.new(0.0446723551, 1.46553934, 0.0211830139, 0.735023618, 0.242944986, -0.633023083, -0.171009988, 0.969846427, 0.173647657, 0.656122029, -0.0193818808, 0.754406095),
+CFrame.new(1.40946591, -0.0135071278, 0, 1.00000012, 0, 0, 0, 1, 0, 0, 0, 1.00000012),
+CFrame.new(-1.55299187, 0.416839302, -0.457236975, 0.68952775, 0.492403448, -0.53112185, -0.633021951, 0.766044736, -0.11161866, 0.35190171, 0.413175911, 0.839911342),
+CFrame.new(0.499983132, -2.00001597, -9.13441181e-06, 0.76604414, 0, -0.642788053, 0, 1, 0, 0.642788053, 0, 0.76604414),
+CFrame.new(-0.500005186, -2.00001597, -1.22189522e-06, 0.98480773, 0, 0.173648447, 0, 1, 0, -0.173648447, 0, 0.98480773),
+}, .3, false)
+end
+Humanoid.WalkSpeed = 2
+tr1.Enabled = true
+so(536642316,Naifu,1,1)
+for i=0,1.4,.2 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(0.0327370502, 1.24810251e-09, 0.00299140904, 0.64278698, 0, -0.766044974, 3.19616191e-07, 1, 2.68189382e-07, 0.766044974, -4.17229018e-07, 0.64278698),
+CFrame.new(-0.0331632644, 1.46557713, -0.11364907, 0.656121135, -0.0193833038, 0.754413188, -0.171011418, 0.969854534, 0.173649102, -0.735024333, -0.24294585, 0.633027315),
+CFrame.new(1.24921072, -0.104290992, 0.29409039, 0.93969059, 0.26200676, 0.21985054, -0.342026025, 0.719844162, 0.604022086, -2.68220901e-07, -0.642788291, 0.766043901),
+CFrame.new(-0.663761616, 0.985711455, -0.487553686, 0.383021712, -0.64278698, -0.663414836, -0.866025984, 0, -0.499998987, 0.321392834, 0.766044974, -0.556670249),
+CFrame.new(0.500005841, -2.00003386, -4.52250242e-06, 0.984807551, 0, -0.173649341, 0, 1, 0, 0.173649341, 0, 0.984807551),
+CFrame.new(-0.499993563, -2.00003386, -1.44541264e-06, 0.64278698, 0, 0.766044974, 0, 1, 0, -0.766044974, 0, 0.64278698),
+}, .5, false)
+MagnitudeDmg(Naifu,3,40,3,RootPart.CFrame.lookVector*5,false,"Sharp",.5)
+end
+swait(5)
+Humanoid.WalkSpeed = 8
+tr1.Enabled = false
+attack = false
+end
+
+zhold = true
+function shoot()
+attack = true
+so(169799883,TEC9,1,1)
+for i=0,1,.1 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+CFrame.new(0.0838357508, 1.42719412, -0.166348219, 0.857789159, 0.297403604, -0.419224113, -0.141315028, 0.920631945, 0.363959879, 0.49419412, -0.252958179, 0.83173573),
+CFrame.new(1.22406256, -0.130654663, 0.277106255, 0.941511214, 0.33170712, 0.0593906641, -0.33170709, 0.881204426, 0.336822212, 0.0593910143, -0.336822152, 0.939693391),
+CFrame.new(-1.43159902, 0, 0.187939197, 0.939692736, 0, 0.342019886, 0, 1, 0, -0.342019916, 0, 0.939692736),
+CFrame.new(0.499998897, -1.99999988, -1.49011612e-06, 0.939692736, 0, -0.342019886, 0, 1, 0, 0.342019916, 0, 0.939692736),
+CFrame.new(-0.500001848, -1.99999988, 1.62422657e-06, 0.939692736, 0, 0.342019886, 0, 1, 0, -0.342019916, 0, 0.939692736),
+}, .3, false)
+end
+Humanoid.WalkSpeed = 2
+local ref = Instance.new("Part",chara)
+ref.Size = Vector3.new(0,0,0)
+ref.Anchored = true
+ref.CanCollide = false
+ref.Transparency = 1
+TEC9.Transparency = 0
+for i=0,1,.1 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(-0.0438226089, 0, -0.0217384323, 0.939692736, 0, 0.342019886, 0, 1, 0, -0.342019916, 0, 0.939692736),
+CFrame.new(0.0674266815, 1.48262143, -0.0571227223, 0.939692736, 0.0593910702, -0.33682391, 0, 0.984807849, 0.173647985, 0.342019886, -0.163175747, 0.925416768),
+CFrame.new(1.62663007, 0.722141325, -0.273156077, 0.883022428, -0.342019916, 0.321393609, 0.342019916, 0, -0.939692736, 0.321393609, 0.939692736, 0.116977602),
+CFrame.new(-1.34998989, 0, 0.259806901, 0.866024911, 0, 0.500000954, 0, 1, 0, -0.500000954, 0, 0.866024852),
+CFrame.new(0.499997795, -1.99999917, -1.51991844e-06, 0.866025686, 0, -0.499999642, 0, 1, 0, 0.499999642, 0, 0.866025686),
+CFrame.new(-0.500000119, -1.99999917, 1.50501728e-06, 0.939692438, 0, 0.342020929, 0, 1, 0, -0.342020959, 0, 0.939692438),
+}, .3, false)
+end
+swait(5)
+local shots = 20
+repeat
+so(745308042,TEC9,1,1)
+ref.CFrame = Mouse.Hit
+MagnitudeDmg(ref,2,12,2,RootPart.CFrame.lookVector*3,false,"Shot",.1)
+local hitpt = Instance.new("Part",EffectModel)
+hitpt.Size = Vector3.new(0,0,.3)
+hitpt.CFrame = TEC9.CFrame * CFrame.new(0,.465,.1)-- * CFrame.Angles(math.rad(90),0,0)
+hitpt.Velocity = RootPart.CFrame.rightVector*10+Vector3.new(0,5,0)
+local hitm = Instance.new("SpecialMesh",hitpt)
+hitm.MeshId = "rbxassetid://94295100"
+hitm.TextureId = "rbxassetid://94287792"
+hitm.Scale = Vector3.new(3,3,3.5)
+coroutine.wrap(function()
+swait(30)
+for i = 0,1,.1 do
+swait()
+hitpt.Transparency = i
+end
+hitpt:Destroy()
+end)()
+Effects.Block(TEC9.CFrame*CFrame.new(-.05,.465,-.9),Vector3.new(1,1,1),Vector3.new(),Vector3.new(.1,.1,.1),"Neon","Bright yellow",true,false,.1)
+shots = shots - 1
+for i=0,1 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(-0.0438226089, 0, -0.0217384323, 0.939692736, 0, 0.342019886, 0, 1, 0, -0.342019916, 0, 0.939692736),
+CFrame.new(0.0674266815, 1.48262143, -0.0571227223, 0.939692736, 0.0593910702, -0.33682391, 0, 0.984807849, 0.173647985, 0.342019886, -0.163175747, 0.925416768),
+CFrame.new(1.62663007, 0.722141325, -0.273156077, 0.883022428, -0.342019916, 0.321393609, 0.342019916, 0, -0.939692736, 0.321393609, 0.939692736, 0.116977602)*CFrame.Angles(math.rad(math.random(-5,5)),math.rad(math.random(-5,5)),math.rad(math.random(-5,5))),
+CFrame.new(-1.34998989, 0, 0.259806901, 0.866024911, 0, 0.500000954, 0, 1, 0, -0.500000954, 0, 0.866024852),
+CFrame.new(0.499997795, -1.99999917, -1.51991844e-06, 0.866025686, 0, -0.499999642, 0, 1, 0, 0.499999642, 0, 0.866025686),
+CFrame.new(-0.500000119, -1.99999917, 1.50501728e-06, 0.939692438, 0, 0.342020929, 0, 1, 0, -0.342020959, 0, 0.939692438),
+}, .3, false)
+end
+until zhold == false or shots == 0
+swait(5)
+ref:Destroy()
+for i=0,1,.25 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+CFrame.new(0, 1.44842434, -0.192443371, 1, 0, 0, 0, 0.939692736, 0.342019886, 0, -0.342019916, 0.939692736),
+CFrame.new(1.39502811, 0.908103704, 0.515749812, -0.213331953, -0.84539932, -0.489683062, 0.875778735, 0.056671422, -0.479374528, 0.433013916, -0.531119943, 0.728292942),
+CFrame.new(-1.5091548, 0.323206276, -0.384231716, 0.750000238, 0.433013409, -0.499999136, -0.500000179, 0.866025388, 6.10661004e-07, 0.433012158, 0.249999225, 0.866025925),
+CFrame.new(0.50000149, -1.99999857, -2.11596489e-06, 0.984807849, 0, -0.173647985, 0, 1, 0, 0.173647985, 0, 0.984807849),
+CFrame.new(-0.500000834, -1.99999857, 1.63912773e-06, 0.984807849, 0, 0.173647985, 0, 1, 0, -0.173647985, 0, 0.984807849),
+}, .4, false)
+end
+so(1159825801,TEC9,1,1)
+swait(15)
+so(211134014,TEC9,1,1)
+for i=0,1,.1 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+CFrame.new(0.0838357508, 1.42719412, -0.166348219, 0.857789159, 0.297403604, -0.419224113, -0.141315028, 0.920631945, 0.363959879, 0.49419412, -0.252958179, 0.83173573),
+CFrame.new(1.22406256, -0.130654663, 0.277106255, 0.941511214, 0.33170712, 0.0593906641, -0.33170709, 0.881204426, 0.336822212, 0.0593910143, -0.336822152, 0.939693391),
+CFrame.new(-1.43159902, 0, 0.187939197, 0.939692736, 0, 0.342019886, 0, 1, 0, -0.342019916, 0, 0.939692736),
+CFrame.new(0.499998897, -1.99999988, -1.49011612e-06, 0.939692736, 0, -0.342019886, 0, 1, 0, 0.342019916, 0, 0.939692736),
+CFrame.new(-0.500001848, -1.99999988, 1.62422657e-06, 0.939692736, 0, 0.342019886, 0, 1, 0, -0.342019916, 0, 0.939692736),
+}, .3, false)
+end
+TEC9.Transparency = 1
+Humanoid.WalkSpeed = 8
+attack = false
+end
+
+function dbshoot()
+attack = true
+so(169799883,DBarrel,1,1)
+for i=0,1,.1 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+CFrame.new(0.0838357508, 1.42719412, -0.166348219, 0.857789159, 0.297403604, -0.419224113, -0.141315028, 0.920631945, 0.363959879, 0.49419412, -0.252958179, 0.83173573),
+CFrame.new(1.22406256, -0.130654663, 0.277106255, 0.941511214, 0.33170712, 0.0593906641, -0.33170709, 0.881204426, 0.336822212, 0.0593910143, -0.336822152, 0.939693391),
+CFrame.new(-1.43159902, 0, 0.187939197, 0.939692736, 0, 0.342019886, 0, 1, 0, -0.342019916, 0, 0.939692736),
+CFrame.new(0.499998897, -1.99999988, -1.49011612e-06, 0.939692736, 0, -0.342019886, 0, 1, 0, 0.342019916, 0, 0.939692736),
+CFrame.new(-0.500001848, -1.99999988, 1.62422657e-06, 0.939692736, 0, 0.342019886, 0, 1, 0, -0.342019916, 0, 0.939692736),
+}, .3, false)
+end
+Humanoid.WalkSpeed = 2
+DBarrel.Transparency = 0
+for i=0,1,.1 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(0, 0.0149096567, 0.133909225, 1, 0, 0, 0, 0.984807849, -0.173647985, 0, 0.173647985, 0.984807849),
+CFrame.new(0, 1.43158329, -0.187937319, 1, 0, 0, 0, 0.939692855, 0.342019796, 0, -0.342019796, 0.939692855),
+CFrame.new(1.0840646, 0.399937928, -0.718070745, 0.868691146, 0.495353371, 0.000888805604, -0.0877529308, 0.15565595, -0.983905911, -0.487519473, 0.854632378, 0.17868565),
+CFrame.new(-1.35562694, -0.0255649146, 0.396688521, 0.939692378, -0.116977789, 0.321394831, -2.60770321e-07, 0.939692855, 0.342019856, -0.342021167, -0.321393549, 0.883021951),
+CFrame.new(0.499995321, -2.00755072, 0.218008161, 0.939692736, 0, -0.342019886, 0.0593910702, 0.984807849, 0.163175747, 0.33682391, -0.173647985, 0.925416768),
+CFrame.new(-0.499996126, -2.00755, 0.218011439, 0.939692736, 0, 0.342019886, -0.0593910702, 0.984807849, 0.163175747, -0.33682391, -0.173647985, 0.925416768),
+}, .3, false)
+end
+swait(5)
+so(132455829,DBarrel,1,1)
+local ref = Instance.new("Part",chara)
+ref.Size = Vector3.new(0,0,0)
+ref.Anchored = true
+ref.CanCollide = false
+ref.Transparency = 1
+ref.CFrame = RootPart.CFrame*CFrame.new(0,0,-6)
+MagnitudeDmg(ref,4,100,0,RootPart.CFrame.lookVector*12,true,"Shot",.1)
+Effects.Block(DBarrel.CFrame*CFrame.new(.1,.3,1.1),Vector3.new(1,1,1),Vector3.new(),Vector3.new(.1,.1,.1),"Neon","Bright yellow",true,false,.05)
+Effects.Block(DBarrel.CFrame*CFrame.new(-.1,.3,1.1),Vector3.new(1,1,1),Vector3.new(),Vector3.new(.1,.1,.1),"Neon","Bright yellow",true,false,.05)
+ref:Destroy()
+for i=0,1,.1 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(0, 0.0149102025, 0.133909985, 1, 0, 0, 0, 0.984812796, -0.173648849, 0, 0.173648849, 0.984812796),
+CFrame.new(0, 1.43158948, 0.0120660895, 1, 0, 0, 0, 1.00000262, -1.1920929e-07, 0, 1.1920929e-07, 1.00000262),
+CFrame.new(1.20370889, 0.765974879, -0.570772648, 0.868689418, 0.319091678, -0.378892303, -0.0877506882, -0.653664529, -0.751683295, -0.48752436, 0.686227262, -0.539830863),
+CFrame.new(-1.49794042, 0.21531868, 0.355185598, 0.923031092, 0.211469814, 0.321394384, -0.321394086, 0.883024752, 0.342021078, -0.211472049, -0.418990374, 0.883024335),
+CFrame.new(0.499998927, -2.00757003, 0.218012124, 0.939692736, 0, -0.342019886, 0.0593913682, 0.984812796, 0.163176581, 0.336825609, -0.173648849, 0.925421476),
+CFrame.new(-0.500004649, -2.00756979, 0.218013197, 0.939692736, 0, 0.342019886, -0.0593913682, 0.984812796, 0.163176581, -0.336825609, -0.173648849, 0.925421476),
+}, .3, false)
+end
+swait(10)
+for i=0,1,.25 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+CFrame.new(0, 1.44842434, -0.192443371, 1, 0, 0, 0, 0.939692736, 0.342019886, 0, -0.342019916, 0.939692736),
+CFrame.new(1.39502811, 0.908103704, 0.515749812, -0.213331953, -0.84539932, -0.489683062, 0.875778735, 0.056671422, -0.479374528, 0.433013916, -0.531119943, 0.728292942),
+CFrame.new(-1.5091548, 0.323206276, -0.384231716, 0.750000238, 0.433013409, -0.499999136, -0.500000179, 0.866025388, 6.10661004e-07, 0.433012158, 0.249999225, 0.866025925),
+CFrame.new(0.50000149, -1.99999857, -2.11596489e-06, 0.984807849, 0, -0.173647985, 0, 1, 0, 0.173647985, 0, 0.984807849),
+CFrame.new(-0.500000834, -1.99999857, 1.63912773e-06, 0.984807849, 0, 0.173647985, 0, 1, 0, -0.173647985, 0, 0.984807849),
+}, .4, false)
+end
+for i=1,2 do
+so(1159825801,DBarrel,1,1)
+local hitpt = Instance.new("Part",EffectModel)
+hitpt.Size = Vector3.new(0,0,.3)
+hitpt.CFrame = TEC9.CFrame * CFrame.Angles(math.rad(90),0,0)
+hitpt.Velocity = RootPart.CFrame.rightVector*10+Vector3.new(0,5,0)
+local hitm = Instance.new("SpecialMesh",hitpt)
+hitm.MeshId = "rbxassetid://94248124"
+hitm.TextureId = "rbxassetid://94219470"
+hitm.Scale = Vector3.new(1.2,1.2,1.2)
+coroutine.wrap(function()
+swait(30)
+for i = 0,1,.1 do
+swait()
+hitpt.Transparency = i
+end
+hitpt:Destroy()
+end)()
+swait()
+end
+swait(15)
+so(211134014,DBarrel,1,1)
+for i=0,1,.1 do
+swait()
+PlayAnimationFromTable({		
+CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+CFrame.new(0.0838357508, 1.42719412, -0.166348219, 0.857789159, 0.297403604, -0.419224113, -0.141315028, 0.920631945, 0.363959879, 0.49419412, -0.252958179, 0.83173573),
+CFrame.new(1.22406256, -0.130654663, 0.277106255, 0.941511214, 0.33170712, 0.0593906641, -0.33170709, 0.881204426, 0.336822212, 0.0593910143, -0.336822152, 0.939693391),
+CFrame.new(-1.43159902, 0, 0.187939197, 0.939692736, 0, 0.342019886, 0, 1, 0, -0.342019916, 0, 0.939692736),
+CFrame.new(0.499998897, -1.99999988, -1.49011612e-06, 0.939692736, 0, -0.342019886, 0, 1, 0, 0.342019916, 0, 0.939692736),
+CFrame.new(-0.500001848, -1.99999988, 1.62422657e-06, 0.939692736, 0, 0.342019886, 0, 1, 0, -0.342019916, 0, 0.939692736),
+}, .3, false)
+end
+DBarrel.Transparency = 1
+Humanoid.WalkSpeed = 8
+attack = false
+end
+
+Mouse.Button1Down:connect(function()
+if attack == false then
+smek()
+end
 end)
 
-mouse.Button1Down:connect(function()
-	if active == false or usable == false then return end
-	if canClick == true and acting == false then
-		if mode == "stab" and finishnum == 1 then
-			canClick = false
-			stab()
-		elseif mode == "stab" and finishnum == 15 then
-			canClick = false
-			stabwithpassion()
-		elseif mode == "fling" then
-			canClick = false
-			fling()
-		elseif mode == "explode" then
-			canClick = false
-			explode()
-		elseif mode == "instasplode" then
-			canClick = false
-			instasplode()
-		elseif mode == "finish" then
-			canClick = false
-			finish()
-		elseif mode == "suicide" then
-			canClick = false
-			kysnigga()
-		elseif mode == "firework" then
-			canClick = false
-			fireworkit()
-		else
-			canClick = false
-			grab()
-		end
-	else
-		if grabbed ~= nil and doing == false then
-			if mode == "release" then
-				if acting == true and grabbed:FindFirstChildOfClass('Humanoid') and grabbed:FindFirstChildOfClass('Humanoid').Health > 0 then
-				release()
-				else
-				hardrelease()
-				end
-			elseif mode == "kill" then
-				if acting == true and grabbed:FindFirstChildOfClass('Humanoid') and grabbed:FindFirstChildOfClass('Humanoid').Health > 0 then
-				kill()
-				else
-				hardrelease()
-				end
-			elseif mode == "paralyze" then
-				if acting == true and grabbed:FindFirstChildOfClass('Humanoid') and grabbed:FindFirstChildOfClass('Humanoid').Health > 0 then
-				paralyze()
-				else
-				hardrelease()
-				end
-			elseif mode == "throw" then
-				if acting == true and grabbed:FindFirstChildOfClass('Humanoid') and grabbed:FindFirstChildOfClass('Humanoid').Health > 0 then
-				throw()
-				else
-				hardrelease()
-				end
-			elseif mode == "explode" then
-				if acting == true and grabbed:FindFirstChildOfClass('Humanoid') and grabbed:FindFirstChildOfClass('Humanoid').Health > 0 then
-				throw()
-				else
-				hardrelease()
-				end
-			end
-		end
-	end
-end)
-
-knife.Touched:connect(function(hitz)
-	if hitz.Parent and hitz.Parent:FindFirstChildOfClass("Humanoid") and hitz.Parent:FindFirstChild('Torso') and acting == true then
-		if mode == "stab" and stabbing == true and hit == false then
-			hit = true
-			tone = math.random(1, 3)
-			audio:Stop()
-			if tone == 1 then audio.SoundId = "rbxassetid://220833967" end
-			if tone == 2 then audio.SoundId = "rbxassetid://220833976" end
-			if tone == 3 then audio.SoundId = "rbxassetid://220834000" end
-			audio.PlaybackSpeed = 1
-			audio:Play()
-			killz(hitz.Parent,'Left Leg')
-			killz(hitz.Parent,'Left Arm')
-			killz(hitz.Parent,'Right Leg')
-			killz(hitz.Parent,'Right Arm')
-		elseif mode == "finish" and finishing == true then
-			print('PSYCHOPATH MODE REEEEEEEEEEEEEEEE')
-			tone = math.random(1, 3)
-			audio:Stop()
-			if tone == 1 then audio.SoundId = "rbxassetid://220833967" end
-			if tone == 2 then audio.SoundId = "rbxassetid://220833976" end
-			if tone == 3 then audio.SoundId = "rbxassetid://220834000" end
-			audio.PlaybackSpeed = 1
-			audio:Play()
-			if hit == false then
-				hitz.Parent:FindFirstChildOfClass('Humanoid').Health = 100
-				wait()
-				killz(hitz.Parent,'Head',nil,false,true)
-			end
-			hit = true
-		elseif grabbed == nil and grabbing == true and hit == false then
-			if hitz.Parent:FindFirstChildOfClass("Humanoid").Health > 0 and hitz.Parent:FindFirstChild('Torso') and hitz.Parent.Torso:FindFirstChild('Neck') then
-			grabbed = hitz.Parent
-			local weldz = Instance.new('Weld',point)
-			weldz.Name = "Holder"
-			weldz.Part0 = point
-			weldz.Part1 = hitz.Parent.Torso
-			weldz.C0 = CFrame.new(0,0,-1.2)
-			end
-		end
-	end
-end)
-
-player.CharacterAdded:connect(function()
-	usable = false
-	for i,v in pairs(playergui:GetChildren()) do
-		if v.Name == "REEEEEEEE" or v.Name == 'PSYCHOPAAAATH' then
-			v:Destroy()
-		end
-	end
-end)
-while usable do
-	local coru = coroutine.wrap(function()
-		for i,v in pairs(knifeparts) do
-			local function try()
-				if v[1].Parent ~= v[2] then
-					v[1].Parent = v[2]
-				end
-			end
-			pcall(try)
-		end
-	if grabbed ~= nil then
-		if grabbed:FindFirstChildOfClass('Humanoid') and grabbed:FindFirstChildOfClass('Humanoid').Health > 0 then
-			for i,v in pairs(grabbed:GetChildren()) do
-				if v:IsA('Tool') then
-					local model = Instance.new('Model',workspace)
-					v.Parent = model
-					model:TranslateBy(Vector3.new(3,0,0))
-				end
-			end
-			grabbed:FindFirstChildOfClass('Humanoid').Name = "Hoomanoid"
-			grabbed:FindFirstChildOfClass('Humanoid').JumpPower = 0
-			grabbed:FindFirstChildOfClass('Humanoid').WalkSpeed = 0
-			grabbed:FindFirstChildOfClass('Humanoid').PlatformStand = true
-			grabweld = grabbed.Torso:FindFirstChild("TargetWeld")
-			if grabweld ~= nil then return end
-			grabbed:FindFirstChildOfClass('Humanoid').PlatformStand = true
-			if grabbed.Torso:FindFirstChild('Left Shoulder') then
-			leftshoulder = grabbed.Torso["Left Shoulder"]:Clone()
-			end
-			if grabbed.Torso:FindFirstChild('Right Shoulder') then
-			rightshoulder = grabbed.Torso["Right Shoulder"]:Clone()
-			end
-			headweld = grabbed.Torso["Neck"]:Clone()
-			local targetweld = Instance.new('Weld',grabbed.Torso)
-			targetweld.Part0 = grabbed.Torso
-			targetweld.Part1 = grabbed.Head
-			targetweld.Name = "TargetWeld"
-			targetweld.C0 = CFrame.new(0,1.5,0) * CFrame.Angles(0, 0, 0)
-			if grabbed:FindFirstChild('Left Arm') then
-			local targetweld2 = Instance.new('Weld',grabbed["Left Arm"])
-			targetweld2.Part0 = grabbed.Torso
-			targetweld2.Part1 = grabbed["Left Arm"]
-			targetweld2.C0 = CFrame.new(-1.5,0,0) * CFrame.Angles(0, 0, 0)
-			end
-			
-			for i = 0,1,0.1 do
-				if me:FindFirstChild("Left Arm") == nil or me:FindFirstChild("Torso") == nil or targetweld == nil then return end
-				targetweld.C0 = targetweld.C0:lerp(CFrame.new(0, 1.5, 0)*CFrame.Angles(0.25, 0, 0), i)
-				if targetweld2 then
-					targetweld2.C0 = targetweld2.C0:lerp(CFrame.new(-1.5, 0.5, 0)*CFrame.Angles(0, 0, -0.55), i)
-				end
-				wait(0.001)
-			end
-		end
-	end
-	end)
-	coru()
-	wait()
+local sprintt = 0
+Mouse.KeyDown:connect(function(k)
+k = k:lower()
+if k=='m' then
+if mus.IsPlaying == true then
+mus:Stop()
+elseif mus.IsPaused == true then
+mus:Play()
 end
-
 end
-local coru=coroutine.wrap(function()
-nub()
-end)
-coru()
-
-player.CharacterAppearanceLoaded:connect(function()
-	local coru =coroutine.wrap(function()
-		nub()
-	end)
-	coru()
+if attack == false then
+if k == 'z' then
+zhold = true
+shoot()
+elseif k == 'x' then
+dbshoot()
+end
+end
 end)
 
+Mouse.KeyUp:connect(function(k)
+k = k:lower()
+if k == 'z' then
+zhold = false
+end
+end)
+
+coroutine.wrap(function()
+while 1 do
+swait()
+if doe <= 360 then
+doe = doe + 2
+else
+doe = 0
+end
+end
+end)()
 while true do
-	local coru=coroutine.wrap(function()
-	if grabbed then
-		v:FindFirstChildOfClass('Humanoid').Jump = false
-		v:FindFirstChildOfClass('Humanoid').Sit = false
-		v:FindFirstChildOfClass('Humanoid').JumpPower = 0
-		v:FindFirstChildOfClass('Humanoid').PlatformStand = true
-		v:FindFirstChildOfClass('Humanoid').Name = "No escape."
-	end
-	for i,v in pairs(rekt) do
-		if v and v:FindFirstChildOfClass('Humanoid') then
-			for a,c in pairs(v:GetChildren()) do
-				if c:IsA('Tool') then
-					local model = Instance.new('Model',workspace)
-					c.Parent = model
-					model:TranslateBy(Vector3.new(3,0,0))
-				end
-			end
-			v:FindFirstChildOfClass('Humanoid').Jump = false
-			v:FindFirstChildOfClass('Humanoid').Sit = false
-			v:FindFirstChildOfClass('Humanoid').JumpPower = 0
-			v:FindFirstChildOfClass('Humanoid').PlatformStand = true
-			v:FindFirstChildOfClass('Humanoid').Name = "No escape."
-			local thing = getplr(v)
-			if thing then
-				thing.CameraMinZoomDistance = 3
-			end
-		else
-			local thing = getplr(v)
-			if thing then
-				thing.CameraMinZoomDistance = 0.5
-			end
-			table.remove(rekt,i)
-		end
-	end
-	end)
-	coru()
-	local coru2 = coroutine.wrap(function()
-		if curpart then
-			curpoint = curpart.CFrame.p
-		end
-		if lastgui then
-			lastgui:Destroy()
-			lastgui = nil
-		end
-		if curpoint then
-			lastgui = Instance.new('BillboardGui',player.PlayerGui)
-			lastgui.AlwaysOnTop = true
-			lastgui.MaxDistance = 0
-			lastgui.Size = UDim2.new(5,0,5,0)
-			if curpart == nil then
-				lastgui.Adornee = workspace
-				lastgui.StudsOffsetWorldSpace = curpoint
-			else
-				lastgui.Adornee = curpart
-			end
-			local cross = Instance.new('ImageLabel',lastgui)
-			cross.BackgroundTransparency = 1
-			cross.Size = UDim2.new(1,0,1,0)
-			cross.Image = 'rbxassetid://316279304'
-			for i,v in pairs(zombies) do
-				if v:FindFirstChildOfClass('Humanoid') then
-					v:FindFirstChildOfClass('Humanoid').WalkToPoint = curpoint
-				end
-			end
-		else
-			for i,v in pairs(zombies) do
-				if v:FindFirstChildOfClass('Humanoid') and v:FindFirstChild('Head') then
-					v:FindFirstChildOfClass('Humanoid').WalkToPoint = v.Head.Position
-				end
-			end
-		end
-	end)
-	coru2()
-	wait()
+swait()
+while true do
+swait()
+if Head:FindFirstChild("mus")==nil then
+mus = Instance.new("Sound",Head)
+mus.Name = "mus"
+mus.SoundId = "rbxassetid://581195737"
+mus.Looped = true
+mus.Volume = 1
+mus:Play()
+end
+if sprintt >= 1 then
+sprintt = sprintt - 1
+end
+Torsovelocity = (RootPart.Velocity * Vector3.new(1, 0, 1)).magnitude
+velocity = RootPart.Velocity.y
+sine = sine + change
+local hit, pos = rayCast(RootPart.Position, (CFrame.new(RootPart.Position, RootPart.Position - Vector3.new(0, 1, 0))).lookVector, 4, chara)
+if RootPart.Velocity.y > 1 and hit == nil then 
+Anim = "Jump"
+if attack == false then
+PlayAnimationFromTable({
+CFrame.new(0, 0.0382082276, -0.0403150208, 1, 0, 0, 0, 0.984807849, 0.173647985, 0, -0.173647985, 0.984807849),
+CFrame.new(0, 1.46579528, 0.0939689279, 1, 0, 0, 0, 0.939692855, -0.342019796, 0, 0.342019796, 0.939692855),
+CFrame.new(1.20945489, -0.213504896, 3.55388607e-07, 0.939692736, 0.342019916, 1.53461215e-07, -0.342019945, 0.939692736, 1.93715096e-07, -8.56816769e-08, -2.23517418e-07, 1.00000012),
+CFrame.new(-1.20945573, -0.213503733, 5.0439985e-07, 0.939692736, -0.342019916, -1.53461215e-07, 0.342019945, 0.939692736, 1.93715096e-07, 8.56816769e-08, -2.23517418e-07, 1.00000012),
+CFrame.new(0.5, -1.99739456, -0.0180913229, 1, 0, 0, 0, 1.00000012, 0, 0, 0, 1.00000012),
+CFrame.new(-0.5, -1.30000103, -0.39999947, 1, 0, 0, 0, 0.939692676, 0.342020601, 0, -0.342020601, 0.939692676),
+}, .3, false)
+end
+elseif RootPart.Velocity.y < -1 and hit == nil then 
+Anim = "Fall"
+if attack == false then
+PlayAnimationFromTable({
+CFrame.new(0, -0.0646628663, 0.0399149321, 1, 0, 0, 0, 0.984807849, -0.173647985, 0, 0.173647985, 0.984807849),
+CFrame.new(0, 1.4913609, -0.128171027, 1, 0, 0, 0, 0.939692855, 0.342019796, 0, -0.342019796, 0.939692855),
+CFrame.new(1.55285025, 0.466259956, -9.26282269e-08, 0.766043842, -0.642788351, -6.46188241e-08, 0.642788291, 0.766043961, -7.4505806e-08, 1.04308128e-07, 1.49011612e-08, 1.00000012),
+CFrame.new(-1.5605253, 0.475036323, -2.10609159e-07, 0.766043842, 0.642788351, 6.46188241e-08, -0.642788291, 0.766043961, -7.4505806e-08, -1.04308128e-07, 1.49011612e-08, 1.00000012),
+CFrame.new(0.500000954, -1.9973948, -0.0180922765, 1, 0, 0, 0, 1.00000012, 0, 0, 0, 1.00000012),
+CFrame.new(-0.499999046, -1.30000043, -0.400000483, 1, 0, 0, 0, 0.939692855, 0.342019796, 0, -0.342019796, 0.939692855),
+}, .3, false)
+end
+elseif Torsovelocity < 1 and hit ~= nil then
+Anim = "Idle"
+if attack == false then
+change = 1
+PlayAnimationFromTable({
+CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1) * CFrame.new(0,.05 * math.cos((sine)/10), 0),
+CFrame.new(0, 1.48262823, -0.0984786302, 1, 0, 0, 0, 0.984807849, 0.173647985, 0, -0.173647985, 0.984807849),
+CFrame.new(1.20945334, -0.213505104, 0, 0.939692736, 0.342019886, 0, -0.342019916, 0.939692736, 0, 0, 0, 1),
+CFrame.new(-1.37076354, 0, -0.304326713, 0.866025388, 0, -0.500000238, 0, 1, 0, 0.500000238, 0, 0.866025388),
+CFrame.new(0.499997705, -2, -2.77906656e-06, 0.984807849, 0, -0.173647985, 0, 1, 0, 0.173647985, 0, 0.984807849) * CFrame.new(0,-.05 * math.cos((sine)/10), 0),
+CFrame.new(-0.50000149, -2, -2.11596489e-06, 0.984807849, 0, 0.173647985, 0, 1, 0, -0.173647985, 0, 0.984807849) * CFrame.new(0,-.05 * math.cos((sine)/10), 0),
+}, .3, false)
+end
+elseif Torsovelocity > 2 and hit ~= nil then
+Anim = "Walk"
+if attack == false then
+Humanoid.WalkSpeed = 8
+PlayAnimationFromTable({
+CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1) * CFrame.new(0, 0- .08 * math.cos((sine) / 5), 0) * CFrame.Angles(0, 0, 0),
+CFrame.new(0, 1.48263013, -0.0984808952, 1, 0, 0, 0, 0.984807849, 0.173647985, 0, -0.173647985, 0.984807849),
+CFrame.new(1.5, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1) * CFrame.new(0, 0, -.5 * math.cos((sine) / 10)) * CFrame.Angles(math.rad(0 + 30 * math.cos((sine) / 10)), 0, 0), 
+CFrame.new(-1.37076354, 0, -0.304326713, 0.866025388, 0, -0.500000238, 0, 1, 0, 0.500000238, 0, 0.866025388),
+CFrame.new(0.540300786, -1.99793816, -9.82598067e-07, 0.998698533, -0.0510031395, 6.36324955e-07, 0.0510031395, 0.998698533, -1.00461093e-05, -8.35937328e-08, 1.08393433e-05, 1.00000024) * CFrame.new(0, 0, 0+ .5 * math.cos((sine) / 10)) * CFrame.Angles(math.rad(0 - 30 * math.cos((sine) / 10)), 0, 0), 
+CFrame.new(-0.539563596, -1.99794078, 1.12228372e-06, 0.998635888, 0.0523072146, -1.77852357e-07, -0.0523072146, 0.998635888, -1.00715051e-05, -3.89727461e-07, 1.08406466e-05, 1.00000024) * CFrame.new(0, 0, 0- .5 * math.cos((sine) / 10)) * CFrame.Angles(math.rad(0 + 30 * math.cos((sine) / 10)), 0, 0), 
+}, .3, false)
+end
+end
+end
 end
